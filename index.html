@@ -27,6 +27,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-tap-
   padding:10px 16px;background:var(--surface);
   border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;
 }
+.header-left{display:flex;align-items:center;gap:10px}
+.team-logo{height:32px;width:32px;object-fit:contain}
 .team-input{
   font-family:var(--font);font-size:18px;font-weight:700;
   border:none;background:transparent;color:var(--text);
@@ -73,7 +75,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-tap-
 .pitch-stripes{
   position:absolute;inset:0;
   background:repeating-linear-gradient(
-    to bottom,transparent 0 8.33%,rgba(0,0,0,.04) 8.33% 16.66%);
+  to bottom,transparent 0 8.33%,rgba(0,0,0,.04) 8.33% 16.66%);
 }
 .fl{position:absolute;background:var(--pitch-line)}
 .fl-h{width:100%;height:1.5px}
@@ -182,14 +184,17 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-tap-
 <body>
 
 <header class="header">
-  <input class="team-input" id="teamName" value="" maxlength="20" placeholder="Team name">
+  <div class="header-left">
+    <img src="logo.png" class="team-logo" alt="Badge" onerror="this.style.display='none'">
+    <input class="team-input" id="teamName" value="" maxlength="20" placeholder="Team name">
+  </div>
   <span class="saved-tag" id="savedTag">Saved ✓</span>
 </header>
 
 <div class="controls">
   <div class="seg">
-    <button class="seg-btn on" id="btn11" onclick="setMode(11)">FUT 11</button>
-    <button class="seg-btn" id="btn7" onclick="setMode(7)">FUT 7</button>
+    <button class="seg-btn" id="btn11" onclick="setMode(11)">FUT 11</button>
+    <button class="seg-btn on" id="btn7" onclick="setMode(7)">FUT 7</button>
   </div>
   <select class="ctrl-select" id="fmSelect" onchange="setFormation(this.value)"></select>
   <div class="swatches" id="swatches"></div>
@@ -201,15 +206,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-tap-
     <div class="fl fl-h" style="top:50%"></div>
     <div class="fl fl-v"></div>
     <div class="cdot"></div>
-    <!-- center circle -->
     <div class="fc" style="width:26%;padding-bottom:26%;left:37%;top:50%;transform:translateY(-50%)"></div>
-    <!-- top penalty box -->
     <div class="fb" style="width:58%;left:21%;top:0;height:16%;border-top:none"></div>
     <div class="fb" style="width:28%;left:36%;top:0;height:7%;border-top:none"></div>
-    <!-- bottom penalty box -->
     <div class="fb" style="width:58%;left:21%;bottom:0;height:16%;border-bottom:none"></div>
     <div class="fb" style="width:28%;left:36%;bottom:0;height:7%;border-bottom:none"></div>
-    <!-- goals -->
     <div class="fb" style="width:18%;left:41%;top:0;height:3%;border-top:none;border-color:rgba(255,255,255,.6)"></div>
     <div class="fb" style="width:18%;left:41%;bottom:0;height:3%;border-bottom:none;border-color:rgba(255,255,255,.6)"></div>
     <div id="tokens"></div>
@@ -217,7 +218,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-tap-
 </div>
 <div class="hint" id="hint">Tap a position to assign a player</div>
 
-<!-- BOTTOM SHEET -->
 <div class="sheet-bg" id="sheetBg" onclick="handleBgClick(event)">
   <div class="sheet">
     <div class="sheet-handle"></div>
@@ -231,7 +231,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-tap-
 </div>
 
 <script>
-// ─── ROSTER ───────────────────────────────────────────────────
 const ROSTER = [
   {id:0,  name:'Fernando Garza',         shirt:'Garza',     num:'99',  pos:'GK'},
   {id:1,  name:'Luis Roberto Velázquez', shirt:'Velázquez', num:'2',   pos:'DEF'},
@@ -247,8 +246,6 @@ const ROSTER = [
   {id:11, name:'Gerardo Contreras',      shirt:'Gerardo',   num:'7',   pos:'FWD'},
 ];
 
-// ─── FORMATIONS ───────────────────────────────────────────────
-// pos arrays: [x%, y%] from top-left; GK always at bottom (~88%)
 const FM11 = {
   '4-4-2': {
     labels:['GK','LB','CB','CB','RB','LM','CM','CM','RM','ST','ST'],
@@ -303,20 +300,17 @@ const FM7 = {
   },
 };
 
-// ─── KIT COLORS ───────────────────────────────────────────────
 const KITS = ['#9b59b6','#e74c3c','#1a6ef5','#27ae60','#e67e22','#1abc9c','#2c3e50','#f39c12'];
 
-// ─── STATE ────────────────────────────────────────────────────
 let state = {
-  teamName: 'Los Guardianes',
-  mode: 11,
-  formation: '4-4-2',
-  kitColor: KITS[0],
-  lineups: {}  // key: "11_4-4-2" -> [rosterId|null, ...]
+  teamName: 'Inter Milanesa',
+  mode: 7,
+  formation: '2-3-1',
+  kitColor: KITS[1], // Index 1 is RED
+  lineups: {}
 };
 let activeSlot = null;
 
-// ─── STORAGE ──────────────────────────────────────────────────
 function save() {
   try {
     localStorage.setItem('lineup_builder_v1', JSON.stringify(state));
@@ -334,7 +328,6 @@ function load() {
   } catch(e) {}
 }
 
-// ─── LINEUP HELPERS ───────────────────────────────────────────
 function lineupKey() { return `${state.mode}_${state.formation}`; }
 
 function getLineup() {
@@ -350,13 +343,11 @@ function usedIds() {
   return new Set(getLineup().filter(x => x !== null));
 }
 
-// ─── CONTROLS ─────────────────────────────────────────────────
 function setMode(m) {
   state.mode = m;
   document.getElementById('btn11').classList.toggle('on', m === 11);
   document.getElementById('btn7').classList.toggle('on', m === 7);
   const fms = m === 11 ? FM11 : FM7;
-  // keep formation if valid, else default
   if (!fms[state.formation]) state.formation = Object.keys(fms)[0];
   rebuildSelect();
   render();
@@ -392,7 +383,6 @@ function setKit(c) {
   save();
 }
 
-// ─── RENDER ───────────────────────────────────────────────────
 function render() {
   const fm = (state.mode === 11 ? FM11 : FM7)[state.formation];
   const lineup = getLineup();
@@ -426,7 +416,6 @@ function render() {
   document.getElementById('teamName').value = state.teamName;
 }
 
-// ─── BOTTOM SHEET ─────────────────────────────────────────────
 function openSheet(slotIdx) {
   activeSlot = slotIdx;
   const fm = (state.mode === 11 ? FM11 : FM7)[state.formation];
@@ -481,13 +470,11 @@ function clearSlot() {
   save();
 }
 
-// ─── TEAM NAME ────────────────────────────────────────────────
 document.getElementById('teamName').addEventListener('input', function() {
   state.teamName = this.value;
   save();
 });
 
-// ─── INIT ─────────────────────────────────────────────────────
 load();
 rebuildSelect();
 buildSwatches();
