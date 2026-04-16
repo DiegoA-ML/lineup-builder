@@ -28,7 +28,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-tap-
   border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;
 }
 .header-left{display:flex;align-items:center;gap:10px}
-.team-logo{height:32px;width:32px;object-fit:contain}
+.team-logo {
+  height: 60px; /* Changed from 32px */
+  width: 60px;  /* Changed from 32px */
+  object-fit: contain;
+  margin-right: 5px; /* Adds a little breathing room next to the text */
+}
 .team-input{
   font-family:var(--font);font-size:18px;font-weight:700;
   border:none;background:transparent;color:var(--text);
