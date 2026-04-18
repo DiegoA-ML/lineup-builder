@@ -299,7 +299,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
   <div class="section">
     <div class="section-head">
       <span class="section-label">Match History</span>
-      <button class="add-btn" onclick="openModal()">+ Add Match</button>
+      <button class="add-btn" style="display:none" onclick="openModal()">+ Add Match</button>
     </div>
     <div id="configWarning" class="error-msg" style="display:none">
       ⚠️ JSONBin not configured yet — see setup instructions below.
@@ -555,7 +555,7 @@ function renderMatches() {
         ? `<div class="match-scorers">${scorerChips}</div>`
         : `<div class="no-scorers">No goals registered</div>`}
       <div class="match-actions">
-        <button class="del-btn" onclick="deleteMatch(${m.id})">Delete</button>
+        <button class="del-btn" style="display:none" onclick="deleteMatch(${m.id})">Delete</button>
       </div>
     </div>`;
   }).join('');
