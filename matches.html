@@ -18,38 +18,52 @@
 }
 html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var(--font);-webkit-tap-highlight-color:transparent}
 
-/* LOCK SCREEN */
-.lock-screen{
-  position:fixed;inset:0;background:var(--bg);z-index:999;
-  display:flex;align-items:center;justify-content:center;padding:24px;
+/* EDIT FAB */
+.edit-fab{
+  position:fixed;bottom:24px;right:20px;z-index:100;
+  padding:12px 20px;background:var(--accent);color:#fff;
+  border:none;border-radius:50px;font-family:var(--font);
+  font-size:14px;font-weight:700;cursor:pointer;
+  box-shadow:0 4px 16px rgba(26,110,245,.4);
+  transition:opacity .15s,transform .15s;letter-spacing:.2px;
 }
-.lock-card{
+.edit-fab:active{opacity:.8;transform:scale(.97)}
+.edit-fab.unlocked{background:#27ae60;box-shadow:0 4px 16px rgba(39,174,96,.35)}
+
+/* PASSWORD MODAL */
+.pw-modal-bg{
+  position:fixed;inset:0;background:rgba(0,0,0,.48);
+  z-index:300;display:flex;align-items:center;justify-content:center;padding:24px;
+  opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.pw-modal-bg.open{opacity:1;pointer-events:all}
+.pw-card{
   background:var(--surface);border-radius:16px;border:1px solid var(--border);
   padding:28px 24px;width:100%;max-width:320px;text-align:center;
 }
-.lock-icon{font-size:36px;margin-bottom:12px}
-.lock-title{font-size:18px;font-weight:700;margin-bottom:4px}
-.lock-sub{font-size:13px;color:var(--muted);margin-bottom:20px}
-.lock-input{
+.pw-icon{font-size:32px;margin-bottom:10px}
+.pw-title{font-size:17px;font-weight:700;margin-bottom:4px}
+.pw-sub{font-size:13px;color:var(--muted);margin-bottom:18px}
+.pw-input{
   width:100%;padding:11px 14px;border:1px solid var(--border);
   border-radius:10px;background:var(--bg);color:var(--text);
   font-family:var(--font);font-size:15px;text-align:center;
   letter-spacing:2px;outline:none;margin-bottom:10px;
   transition:border .15s;
 }
-.lock-input:focus{border-color:var(--accent)}
-.lock-input.shake{animation:shake .35s ease}
+.pw-input:focus{border-color:var(--accent)}
+.pw-input.shake{animation:shake .35s ease}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
-.lock-btn{
+.pw-btn{
   width:100%;padding:12px;background:var(--accent);color:#fff;
   border:none;border-radius:10px;font-family:var(--font);
   font-size:15px;font-weight:700;cursor:pointer;transition:opacity .15s;
 }
-.lock-btn:active{opacity:.8}
-.lock-err{font-size:12px;color:#e74c3c;margin-top:8px;min-height:18px;font-weight:600}
-.lock-bypass{
-  margin-top:14px;font-size:12px;color:var(--muted);
-  text-decoration:underline;cursor:pointer;
+.pw-btn:active{opacity:.8}
+.pw-err{font-size:12px;color:#e74c3c;margin-top:8px;min-height:18px;font-weight:600}
+.pw-cancel{
+  margin-top:12px;font-size:13px;color:var(--muted);
+  cursor:pointer;text-decoration:underline;display:block;
 }
 
 /* NAV */
@@ -254,20 +268,23 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
 </head>
 <body>
 
-<!-- LOCK SCREEN -->
-<div class="lock-screen" id="lockScreen">
-  <div class="lock-card">
-    <div class="lock-icon">⚽</div>
-    <div class="lock-title">Team Area</div>
-    <div class="lock-sub">Enter the password to add or edit matches</div>
-    <input class="lock-input" id="lockInput" type="password"
+<!-- PASSWORD MODAL (shown only when Edit tapped) -->
+<div class="pw-modal-bg" id="pwModalBg" onclick="handlePwBg(event)">
+  <div class="pw-card">
+    <div class="pw-icon">🔒</div>
+    <div class="pw-title">Team editors only</div>
+    <div class="pw-sub">Enter the password to add or edit matches</div>
+    <input class="pw-input" id="pwInput" type="password"
       placeholder="••••••••" maxlength="30"
       onkeydown="if(event.key==='Enter')tryUnlock()">
-    <button class="lock-btn" onclick="tryUnlock()">Enter</button>
-    <div class="lock-err" id="lockErr"></div>
-    <div class="lock-bypass" onclick="viewOnly()">Just browsing — view only</div>
+    <button class="pw-btn" onclick="tryUnlock()">Unlock</button>
+    <div class="pw-err" id="pwErr"></div>
+    <span class="pw-cancel" onclick="closePwModal()">Cancel</span>
   </div>
 </div>
+
+<!-- EDIT FAB -->
+<button class="edit-fab" id="editFab" onclick="onEditFab()">✏️ Edit</button>
 
 <nav class="nav">
   <span class="nav-title">⚽ Records</span>
@@ -374,45 +391,74 @@ const PASSWORD = 'thegameneverdies';
 // ─────────────────────────────────────────────
 
 // ─── AUTH ─────────────────────────────────────
-let isUnlocked = false;
+let isUnlocked = sessionStorage.getItem('tgnd_auth') === '1';
+
+function onEditFab() {
+  if (isUnlocked) {
+    // Already unlocked — toggle edit controls visibility
+    const anyVisible = document.querySelector('.add-btn') &&
+      document.querySelector('.add-btn').style.display !== 'none';
+    setEditUI(!anyVisible);
+  } else {
+    openPwModal();
+  }
+}
+
+function openPwModal() {
+  document.getElementById('pwInput').value = '';
+  document.getElementById('pwErr').textContent = '';
+  document.getElementById('pwModalBg').classList.add('open');
+  setTimeout(() => document.getElementById('pwInput').focus(), 100);
+}
+
+function closePwModal() {
+  document.getElementById('pwModalBg').classList.remove('open');
+}
+
+function handlePwBg(e) {
+  if (e.target === document.getElementById('pwModalBg')) closePwModal();
+}
 
 function tryUnlock() {
-  const val = document.getElementById('lockInput').value;
+  const val = document.getElementById('pwInput').value;
   if (val === PASSWORD) {
     isUnlocked = true;
     sessionStorage.setItem('tgnd_auth', '1');
-    document.getElementById('lockScreen').style.display = 'none';
+    closePwModal();
     setEditUI(true);
+    const fab = document.getElementById('editFab');
+    fab.textContent = '✅ Editing';
+    fab.classList.add('unlocked');
   } else {
-    const inp = document.getElementById('lockInput');
-    document.getElementById('lockErr').textContent = 'Wrong password';
+    const inp = document.getElementById('pwInput');
+    document.getElementById('pwErr').textContent = 'Wrong password';
     inp.classList.remove('shake');
-    void inp.offsetWidth; // restart animation
+    void inp.offsetWidth;
     inp.classList.add('shake');
     inp.value = '';
   }
 }
 
-function viewOnly() {
-  document.getElementById('lockScreen').style.display = 'none';
-  setEditUI(false);
-}
-
-function setEditUI(unlocked) {
-  // Show/hide add button and delete buttons
+function setEditUI(show) {
   document.querySelectorAll('.add-btn, .del-btn, .sheet-clear').forEach(el => {
-    el.style.display = unlocked ? '' : 'none';
+    el.style.display = show ? '' : 'none';
   });
+  const fab = document.getElementById('editFab');
+  if (isUnlocked) {
+    fab.textContent = show ? '✅ Editing' : '✏️ Edit';
+    fab.classList.toggle('unlocked', show);
+  }
 }
 
-// Check if already authenticated this session
-if (sessionStorage.getItem('tgnd_auth') === '1') {
-  isUnlocked = true;
-  document.getElementById('lockScreen').style.display = 'none';
-} else {
-  // Hide edit controls until authenticated — set after page renders
-  document.addEventListener('DOMContentLoaded', () => setEditUI(false));
-}
+// On load: always hide edit controls, show them only if already authenticated
+document.addEventListener('DOMContentLoaded', () => {
+  setEditUI(isUnlocked);
+  if (isUnlocked) {
+    const fab = document.getElementById('editFab');
+    fab.textContent = '✅ Editing';
+    fab.classList.add('unlocked');
+  }
+});
 
 const ROSTER = [
   {id:0,  name:'Fernando Garza',         shirt:'Garza',     num:'99',  pos:'GK'},
