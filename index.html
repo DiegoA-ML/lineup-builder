@@ -24,33 +24,34 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-tap-
 /* HEADER */
 .header{
   display:flex;align-items:center;justify-content:space-between;
-  padding:10px 16px;background:var(--surface);
+  padding:6px 12px;background:var(--surface);
   border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;
+  gap:8px;
 }
-.header-left{display:flex;align-items:center;gap:10px}
+.header-left{display:flex;align-items:center;gap:6px;min-width:0;flex:1}
 .team-logo {
-  height: 100px; /* Changed from 32px */
-  width: 100px;  /* Changed from 32px */
+  height: 44px;
+  width: 44px;
   object-fit: contain;
-  margin-right: 5px; /* Adds a little breathing room next to the text */
+  flex-shrink:0;
 }
 .team-input{
-  font-family:var(--font);font-size:18px;font-weight:700;
+  font-family:var(--font);font-size:16px;font-weight:700;
   border:none;background:transparent;color:var(--text);
-  outline:none;width:180px;letter-spacing:-.3px;
+  outline:none;min-width:0;flex:1;letter-spacing:-.3px;
 }
 
-/* ── NEW: right-side wrapper + nav tabs ── */
-.header-right{display:flex;align-items:center;gap:10px}
+/* ── right-side wrapper + nav tabs ── */
+.header-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .nav-tabs{display:flex;gap:4px}
 .nav-tab{
-  padding:6px 14px;font-family:var(--font);font-size:13px;font-weight:600;
+  padding:6px 12px;font-family:var(--font);font-size:13px;font-weight:600;
   border:1px solid var(--border);border-radius:8px;text-decoration:none;
   color:var(--muted);background:transparent;cursor:pointer;
-  transition:all .15s;letter-spacing:.2px;
+  transition:all .15s;letter-spacing:.2px;white-space:nowrap;
 }
 .nav-tab.on{background:var(--accent);color:#fff;border-color:transparent}
-/* ──────────────────────────────────────── */
+/* ──────────────────────────────────── */
 
 .saved-tag{font-size:11px;color:#27ae60;font-weight:600;opacity:0;transition:opacity .4s}
 .saved-tag.show{opacity:1}
