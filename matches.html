@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Matches — Lineup Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0ede8;--surface:#ffffff;--text:#1a1a18;--muted:#888;
+  --border:rgba(0,0,0,0.1);--accent:#1a6ef5;
+  --font:'Barlow',sans-serif;--font-num:'Barlow Condensed',sans-serif;
+}
+@media(prefers-color-scheme:dark){
+  :root{--bg:#141412;--surface:#1e1e1c;--text:#f0ede8;--muted:#666;--border:rgba(255,255,255,0.1)}
+}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var(--font);-webkit-tap-highlight-color:transparent}
+
+/* LOCK SCREEN */
+.lock-screen{
+  position:fixed;inset:0;background:var(--bg);z-index:999;
+  display:flex;align-items:center;justify-content:center;padding:24px;
+}
+.lock-card{
+  background:var(--surface);border-radius:16px;border:1px solid var(--border);
+  padding:28px 24px;width:100%;max-width:320px;text-align:center;
+}
+.lock-icon{font-size:36px;margin-bottom:12px}
+.lock-title{font-size:18px;font-weight:700;margin-bottom:4px}
+.lock-sub{font-size:13px;color:var(--muted);margin-bottom:20px}
+.lock-input{
+  width:100%;padding:11px 14px;border:1px solid var(--border);
+  border-radius:10px;background:var(--bg);color:var(--text);
+  font-family:var(--font);font-size:15px;text-align:center;
+  letter-spacing:2px;outline:none;margin-bottom:10px;
+  transition:border .15s;
+}
+.lock-input:focus{border-color:var(--accent)}
+.lock-input.shake{animation:shake .35s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.lock-btn{
+  width:100%;padding:12px;background:var(--accent);color:#fff;
+  border:none;border-radius:10px;font-family:var(--font);
+  font-size:15px;font-weight:700;cursor:pointer;transition:opacity .15s;
+}
+.lock-btn:active{opacity:.8}
+.lock-err{font-size:12px;color:#e74c3c;margin-top:8px;min-height:18px;font-weight:600}
+.lock-bypass{
+  margin-top:14px;font-size:12px;color:var(--muted);
+  text-decoration:underline;cursor:pointer;
+}
+
+/* NAV */
+.nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 16px;background:var(--surface);
+  border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;
+}
+.nav-title{font-size:18px;font-weight:700;letter-spacing:-.3px}
+.nav-tabs{display:flex;gap:4px}
+.nav-tab{
+  padding:6px 14px;font-family:var(--font);font-size:13px;font-weight:600;
+  border:1px solid var(--border);border-radius:8px;text-decoration:none;
+  color:var(--muted);background:transparent;cursor:pointer;
+  transition:all .15s;letter-spacing:.2px;
+}
+.nav-tab.on{background:var(--accent);color:#fff;border-color:transparent}
+
+/* SECTIONS */
+.section{padding:16px}
+.section-head{
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:12px
+}
+.section-label{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);text-transform:uppercase}
+.add-btn{
+  padding:7px 16px;background:var(--accent);color:#fff;
+  border:none;border-radius:8px;font-family:var(--font);font-size:13px;
+  font-weight:700;cursor:pointer;letter-spacing:.2px;transition:opacity .15s;
+}
+.add-btn:active{opacity:.8}
+
+/* MATCH CARD */
+.match-card{
+  background:var(--surface);border-radius:12px;
+  border:1px solid var(--border);margin-bottom:10px;overflow:hidden;
+}
+.match-top{
+  display:flex;align-items:center;gap:10px;padding:12px 14px;
+}
+.match-type{
+  font-size:10px;font-weight:700;padding:3px 8px;border-radius:5px;
+  letter-spacing:.5px;text-transform:uppercase;flex-shrink:0;
+}
+.type-Friendly{background:#e8f4fd;color:#0a5ec4}
+.type-League{background:#edf8ed;color:#1a7a1a}
+.type-Playoff{background:#fdf3e8;color:#b8600a}
+.type-Semi-final{background:#f5e8fd;color:#7a1aaa}
+.type-Final{background:#fde8e8;color:#c40a0a}
+.match-vs{flex:1;min-width:0}
+.match-opponent{font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.match-date{font-size:11px;color:var(--muted);margin-top:1px}
+.match-score{
+  font-family:var(--font-num);font-size:22px;font-weight:700;
+  letter-spacing:1px;flex-shrink:0;
+}
+.score-W{color:#27ae60}.score-D{color:var(--muted)}.score-L{color:#e74c3c}
+.match-result-pill{
+  font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;
+  flex-shrink:0;letter-spacing:.5px;
+}
+.pill-W{background:#edfaed;color:#1a7a1a}
+.pill-D{background:#f0ede8;color:#888}
+.pill-L{background:#fdeaea;color:#c40a0a}
+.match-scorers{
+  display:flex;flex-wrap:wrap;gap:6px;
+  padding:8px 14px 12px;border-top:1px solid var(--border);
+}
+.scorer-chip{
+  font-size:12px;font-weight:600;padding:3px 10px;
+  background:var(--bg);border:1px solid var(--border);
+  border-radius:20px;color:var(--text);
+}
+.no-scorers{font-size:12px;color:var(--muted);padding:8px 14px 12px}
+.match-actions{
+  display:flex;justify-content:flex-end;gap:6px;
+  padding:0 14px 10px;
+}
+.del-btn{
+  font-size:11px;font-weight:600;padding:4px 10px;
+  border:1px solid var(--border);border-radius:6px;
+  background:transparent;color:#e74c3c;cursor:pointer;font-family:var(--font);
+}
+.del-btn:active{background:#fdeaea}
+
+/* GOALSCORER TABLE */
+.g-table{
+  background:var(--surface);border-radius:12px;
+  border:1px solid var(--border);overflow:hidden;
+}
+.g-row{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;border-bottom:1px solid var(--border);
+}
+.g-row:last-child{border-bottom:none}
+.g-rank{
+  font-family:var(--font-num);font-size:14px;font-weight:700;
+  color:var(--muted);width:20px;text-align:center;flex-shrink:0;
+}
+.g-rank-1{color:#f39c12}
+.g-rank-2{color:#95a5a6}
+.g-rank-3{color:#c0835a}
+.g-num{
+  width:34px;height:34px;border-radius:50%;
+  background:var(--bg);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-num);font-size:13px;font-weight:700;flex-shrink:0;
+}
+.g-info{flex:1;min-width:0}
+.g-shirt{font-size:14px;font-weight:700}
+.g-full{font-size:11px;color:var(--muted)}
+.g-goals{font-family:var(--font-num);font-size:20px;font-weight:700;flex-shrink:0}
+.g-ball{font-size:11px;color:var(--muted);margin-left:2px}
+.empty-state{
+  text-align:center;padding:40px 20px;color:var(--muted);
+  font-size:14px;font-weight:500;
+}
+
+/* LOADING */
+.loading{text-align:center;padding:40px;color:var(--muted);font-size:14px}
+.error-msg{
+  background:#fdeaea;border:1px solid #f5b8b8;border-radius:10px;
+  padding:14px;margin:12px 0;font-size:13px;color:#c40a0a;font-weight:500;
+  text-align:center;
+}
+
+/* MODAL */
+.modal-bg{
+  position:fixed;inset:0;background:rgba(0,0,0,.48);
+  z-index:200;display:flex;align-items:flex-end;
+  opacity:0;pointer-events:none;transition:opacity .25s;
+}
+.modal-bg.open{opacity:1;pointer-events:all}
+.modal{
+  background:var(--surface);border-radius:20px 20px 0 0;
+  width:100%;max-height:90vh;display:flex;flex-direction:column;
+  transform:translateY(100%);transition:transform .28s cubic-bezier(.32,1,.56,1);
+}
+.modal-bg.open .modal{transform:translateY(0)}
+.modal-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:10px auto 0;flex-shrink:0}
+.modal-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 16px 10px;border-bottom:1px solid var(--border);flex-shrink:0;
+}
+.modal-title{font-size:15px;font-weight:700}
+.modal-close{
+  width:28px;height:28px;border-radius:50%;border:none;
+  background:var(--bg);color:var(--muted);cursor:pointer;font-size:14px;
+  display:flex;align-items:center;justify-content:center;
+}
+.modal-body{overflow-y:auto;flex:1;padding:16px}
+.form-group{margin-bottom:16px}
+.form-label{font-size:12px;font-weight:700;letter-spacing:.5px;color:var(--muted);text-transform:uppercase;margin-bottom:6px;display:block}
+.form-input,.form-select{
+  width:100%;padding:10px 12px;border:1px solid var(--border);
+  border-radius:8px;background:var(--bg);color:var(--text);
+  font-family:var(--font);font-size:14px;outline:none;
+  transition:border .15s;
+}
+.form-input:focus,.form-select:focus{border-color:var(--accent)}
+.score-row{display:flex;gap:12px}
+.score-row .form-group{flex:1}
+.type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.type-pill{
+  padding:8px 4px;text-align:center;border:1px solid var(--border);
+  border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;
+  background:var(--surface);color:var(--muted);transition:all .15s;
+  letter-spacing:.2px;
+}
+.type-pill.sel{border-color:var(--accent);color:var(--accent);background:rgba(26,110,245,.08)}
+.scorer-grid{display:flex;flex-direction:column;gap:4px;max-height:260px;overflow-y:auto}
+.scorer-row{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 10px;border-radius:8px;border:1px solid var(--border);
+  background:var(--surface);
+}
+.scorer-name{flex:1;font-size:13px;font-weight:600}
+.scorer-num-ctrl{display:flex;align-items:center;gap:6px}
+.goal-dec,.goal-inc{
+  width:28px;height:28px;border-radius:6px;border:1px solid var(--border);
+  background:var(--bg);color:var(--text);font-size:16px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-weight:700;
+  transition:background .1s;
+}
+.goal-dec:active,.goal-inc:active{background:var(--border)}
+.goal-count{font-family:var(--font-num);font-size:16px;font-weight:700;width:18px;text-align:center}
+.modal-footer{
+  padding:12px 16px;border-top:1px solid var(--border);flex-shrink:0;
+  display:flex;gap:8px;
+}
+.save-btn{
+  flex:1;padding:12px;background:var(--accent);color:#fff;
+  border:none;border-radius:10px;font-family:var(--font);
+  font-size:15px;font-weight:700;cursor:pointer;transition:opacity .15s;
+}
+.save-btn:active{opacity:.8}
+.cancel-btn{
+  padding:12px 18px;border:1px solid var(--border);border-radius:10px;
+  background:transparent;color:var(--muted);font-family:var(--font);
+  font-size:15px;font-weight:600;cursor:pointer;
+}
+</style>
+</head>
+<body>
+
+<!-- LOCK SCREEN -->
+<div class="lock-screen" id="lockScreen">
+  <div class="lock-card">
+    <div class="lock-icon">⚽</div>
+    <div class="lock-title">Team Area</div>
+    <div class="lock-sub">Enter the password to add or edit matches</div>
+    <input class="lock-input" id="lockInput" type="password"
+      placeholder="••••••••" maxlength="30"
+      onkeydown="if(event.key==='Enter')tryUnlock()">
+    <button class="lock-btn" onclick="tryUnlock()">Enter</button>
+    <div class="lock-err" id="lockErr"></div>
+    <div class="lock-bypass" onclick="viewOnly()">Just browsing — view only</div>
+  </div>
+</div>
+
+<nav class="nav">
+  <span class="nav-title">⚽ Records</span>
+  <div class="nav-tabs">
+    <a class="nav-tab" href="index.html">Lineup</a>
+    <a class="nav-tab on" href="matches.html">Matches</a>
+  </div>
+</nav>
+
+<!-- TAB: MATCHES -->
+<div id="tabMatches">
+  <div class="section">
+    <div class="section-head">
+      <span class="section-label">Match History</span>
+      <button class="add-btn" onclick="openModal()">+ Add Match</button>
+    </div>
+    <div id="configWarning" class="error-msg" style="display:none">
+      ⚠️ JSONBin not configured yet — see setup instructions below.
+    </div>
+    <div id="matchList"><div class="loading">Loading matches…</div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <span class="section-label">Goalscorer Table</span>
+    </div>
+    <div id="goalTable"><div class="loading">…</div></div>
+  </div>
+
+  <!-- SETUP INSTRUCTIONS (hidden once configured) -->
+  <div class="section" id="setupSection" style="display:none">
+    <div style="background:var(--surface);border-radius:12px;border:1px solid var(--border);padding:16px">
+      <p style="font-size:13px;font-weight:700;margin-bottom:10px">📋 One-time setup (5 min)</p>
+      <ol style="font-size:13px;color:var(--muted);line-height:2;padding-left:18px">
+        <li>Go to <strong style="color:var(--text)">jsonbin.io</strong> → Sign up free</li>
+        <li>Click <strong style="color:var(--text)">Create Bin</strong></li>
+        <li>Paste the starter JSON shown below, click <strong style="color:var(--text)">Create</strong></li>
+        <li>Copy the <strong style="color:var(--text)">BIN ID</strong> from the URL</li>
+        <li>Go to <strong style="color:var(--text)">API Keys</strong> → copy your key</li>
+        <li>Open <strong style="color:var(--text)">matches.html</strong> in VS Code, fill in the two values at the top of the script</li>
+      </ol>
+      <div style="margin-top:12px;background:var(--bg);border-radius:8px;padding:12px;font-family:monospace;font-size:11px;color:var(--muted);word-break:break-all;line-height:1.6">
+        {"matches":[{"id":1,"date":"2026-04-18","type":"Friendly","opponent":"Campeones Kalcho","goalsFor":3,"goalsAgainst":4,"scorers":[{"playerId":11,"goals":2},{"playerId":5,"goals":1}]}]}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD MATCH MODAL -->
+<div class="modal-bg" id="modalBg" onclick="handleModalBg(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-head">
+      <span class="modal-title">Add Match</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Match Type</label>
+        <div class="type-grid" id="typeGrid"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Opponent</label>
+        <input class="form-input" id="fOpponent" placeholder="e.g. Campeones Kalcho" maxlength="40">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Date</label>
+        <input class="form-input" id="fDate" type="date">
+      </div>
+      <div class="score-row">
+        <div class="form-group">
+          <label class="form-label">Our Goals</label>
+          <input class="form-input" id="fFor" type="number" min="0" max="99" placeholder="0">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Their Goals</label>
+          <input class="form-input" id="fAgainst" type="number" min="0" max="99" placeholder="0">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Goal Scorers</label>
+        <div class="scorer-grid" id="scorerGrid"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="cancel-btn" onclick="closeModal()">Cancel</button>
+      <button class="save-btn" onclick="saveMatch()">Save Match</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// ⚙️  CONFIGURE THESE TWO VALUES
+//     After following the setup instructions below
+// ─────────────────────────────────────────────
+const BIN_ID  = '69e3d72836566621a8c96d0a';
+const API_KEY = '$2a$10$AJMfLQm2lz9YD23C35XrgO8VNu8T4B3tkHG7X6vVCEgm85UHsDVB6';
+const PASSWORD = 'thegameneverdies';
+// Yes, the Key and Password are available in my repo. No, I'm not dumb. If someone wants to delete me and my friend's 7-a-side 
+// futbol page data, and assuming that is you, and you are reading this, then you have gone through great lengths and deserve
+// the small satisfaction of doing so. I am not encrypting any of this that would be too much and I need the repo website to be public
+// for my friends. Anyhow, I have everything backed in a private repo with a different Key and Password ;)
+// ─────────────────────────────────────────────
+
+// ─── AUTH ─────────────────────────────────────
+let isUnlocked = false;
+
+function tryUnlock() {
+  const val = document.getElementById('lockInput').value;
+  if (val === PASSWORD) {
+    isUnlocked = true;
+    sessionStorage.setItem('tgnd_auth', '1');
+    document.getElementById('lockScreen').style.display = 'none';
+    setEditUI(true);
+  } else {
+    const inp = document.getElementById('lockInput');
+    document.getElementById('lockErr').textContent = 'Wrong password';
+    inp.classList.remove('shake');
+    void inp.offsetWidth; // restart animation
+    inp.classList.add('shake');
+    inp.value = '';
+  }
+}
+
+function viewOnly() {
+  document.getElementById('lockScreen').style.display = 'none';
+  setEditUI(false);
+}
+
+function setEditUI(unlocked) {
+  // Show/hide add button and delete buttons
+  document.querySelectorAll('.add-btn, .del-btn, .sheet-clear').forEach(el => {
+    el.style.display = unlocked ? '' : 'none';
+  });
+}
+
+// Check if already authenticated this session
+if (sessionStorage.getItem('tgnd_auth') === '1') {
+  isUnlocked = true;
+  document.getElementById('lockScreen').style.display = 'none';
+} else {
+  // Hide edit controls until authenticated — set after page renders
+  document.addEventListener('DOMContentLoaded', () => setEditUI(false));
+}
+
+const ROSTER = [
+  {id:0,  name:'Fernando Garza',         shirt:'Garza',     num:'99',  pos:'GK'},
+  {id:1,  name:'Luis Roberto Velázquez', shirt:'Velázquez', num:'2',   pos:'DEF'},
+  {id:2,  name:'Alonso Martínez',        shirt:'Maldini',   num:'3',   pos:'DEF'},
+  {id:3,  name:'Armando Ledinich',       shirt:'Ledinich',  num:'23',  pos:'DEF'},
+  {id:4,  name:'Mateo Zepeda',           shirt:'Zepeda',    num:'777', pos:'DEF'},
+  {id:5,  name:'Diego Armando Mijares',  shirt:'Diego',     num:'5',   pos:'MID'},
+  {id:6,  name:'Josh Kenig',             shirt:'Josh',      num:'8',   pos:'MID'},
+  {id:7,  name:'Cesar Emiliano Méndez',  shirt:'Méndez',    num:'10',  pos:'MID'},
+  {id:8,  name:'Avelino Fernández',      shirt:'Ave',       num:'11',  pos:'MID'},
+  {id:9,  name:'Alan Augusto Celma',     shirt:'Alan',      num:'19',  pos:'MID'},
+  {id:10, name:'Ricardo Esteban Gaspar', shirt:'Gaspar',    num:'25',  pos:'MID'},
+  {id:11, name:'Gerardo Contreras',      shirt:'Gerardo',   num:'7',   pos:'FWD'},
+];
+
+const MATCH_TYPES = ['Friendly','League','Playoff','Semi-final','Final'];
+
+const isConfigured = () => BIN_ID !== 'PASTE_YOUR_BIN_ID_HERE' && API_KEY !== 'PASTE_YOUR_API_KEY_HERE';
+
+const BASE = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+const HEADERS = { 'Content-Type':'application/json', 'X-Master-Key': API_KEY };
+
+let allMatches = [];
+let goalCounts = {}; // scorerGoals form state
+
+// ─── API ──────────────────────────────────────
+async function fetchMatches() {
+  if (!isConfigured()) {
+    document.getElementById('configWarning').style.display = 'block';
+    document.getElementById('setupSection').style.display = 'block';
+    // Show the first match from starter data anyway
+    allMatches = [{id:1,date:'2026-04-18',type:'Friendly',opponent:'Campeones Kalcho',goalsFor:3,goalsAgainst:4,scorers:[{playerId:11,goals:2},{playerId:5,goals:1}]}];
+    renderMatches();
+    renderGoalTable();
+    return;
+  }
+  try {
+    const r = await fetch(BASE + '/latest', { headers: HEADERS });
+    const data = await r.json();
+    allMatches = data.record.matches || [];
+    renderMatches();
+    renderGoalTable();
+  } catch(e) {
+    document.getElementById('matchList').innerHTML =
+      '<div class="error-msg">Could not load matches. Check your BIN_ID and API_KEY.</div>';
+  }
+}
+
+async function pushMatches() {
+  if (!isConfigured()) return;
+  await fetch(BASE, {
+    method:'PUT',
+    headers: HEADERS,
+    body: JSON.stringify({ matches: allMatches })
+  });
+}
+
+// ─── RENDER MATCHES ───────────────────────────
+function getResult(m) {
+  if (m.goalsFor > m.goalsAgainst) return 'W';
+  if (m.goalsFor < m.goalsAgainst) return 'L';
+  return 'D';
+}
+
+function renderMatches() {
+  const el = document.getElementById('matchList');
+  if (!allMatches.length) {
+    el.innerHTML = '<div class="empty-state">No matches yet. Add your first one!</div>';
+    return;
+  }
+  const sorted = [...allMatches].sort((a,b) => b.date.localeCompare(a.date));
+  el.innerHTML = sorted.map(m => {
+    const res = getResult(m);
+    const scorerChips = m.scorers && m.scorers.length
+      ? m.scorers.map(s => {
+          const p = ROSTER.find(r => r.id === s.playerId);
+          if (!p) return '';
+          const g = s.goals > 1 ? ` x${s.goals}` : '';
+          return `<span class="scorer-chip">${p.shirt}${g}</span>`;
+        }).join('')
+      : null;
+    return `<div class="match-card">
+      <div class="match-top">
+        <span class="match-type type-${m.type.replace(' ','-')}">${m.type}</span>
+        <div class="match-vs">
+          <div class="match-opponent">vs ${m.opponent}</div>
+          <div class="match-date">${formatDate(m.date)}</div>
+        </div>
+        <span class="match-score score-${res}">${m.goalsFor}–${m.goalsAgainst}</span>
+        <span class="match-result-pill pill-${res}">${res}</span>
+      </div>
+      ${scorerChips
+        ? `<div class="match-scorers">${scorerChips}</div>`
+        : `<div class="no-scorers">No goals registered</div>`}
+      <div class="match-actions">
+        <button class="del-btn" onclick="deleteMatch(${m.id})">Delete</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function formatDate(d) {
+  try {
+    return new Date(d + 'T12:00:00').toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'});
+  } catch(e){ return d; }
+}
+
+// ─── GOALSCORER TABLE ─────────────────────────
+function renderGoalTable() {
+  const totals = {};
+  allMatches.forEach(m => {
+    (m.scorers || []).forEach(s => {
+      totals[s.playerId] = (totals[s.playerId] || 0) + s.goals;
+    });
+  });
+  const sorted = Object.entries(totals)
+    .map(([id, goals]) => ({ player: ROSTER.find(r => r.id === +id), goals }))
+    .filter(x => x.player)
+    .sort((a,b) => b.goals - a.goals);
+
+  const el = document.getElementById('goalTable');
+  if (!sorted.length) {
+    el.innerHTML = '<div class="empty-state">No goals yet</div>';
+    return;
+  }
+  el.innerHTML = `<div class="g-table">` +
+    sorted.map((entry, i) => {
+      const rankCls = i === 0 ? 'g-rank-1' : i === 1 ? 'g-rank-2' : i === 2 ? 'g-rank-3' : '';
+      const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : i+1;
+      return `<div class="g-row">
+        <div class="g-rank ${rankCls}">${medal}</div>
+        <div class="g-num">${entry.player.num}</div>
+        <div class="g-info">
+          <div class="g-shirt">${entry.player.shirt}</div>
+          <div class="g-full">${entry.player.name}</div>
+        </div>
+        <span class="g-goals">${entry.goals}</span>
+        <span class="g-ball">⚽</span>
+      </div>`;
+    }).join('') + `</div>`;
+}
+
+// ─── DELETE ───────────────────────────────────
+async function deleteMatch(id) {
+  if (!confirm('Delete this match?')) return;
+  allMatches = allMatches.filter(m => m.id !== id);
+  await pushMatches();
+  renderMatches();
+  renderGoalTable();
+}
+
+// ─── MODAL ────────────────────────────────────
+let selectedType = 'Friendly';
+
+function openModal() {
+  selectedType = 'Friendly';
+  goalCounts = {};
+  ROSTER.forEach(p => { goalCounts[p.id] = 0; });
+
+  // Type grid
+  document.getElementById('typeGrid').innerHTML = MATCH_TYPES.map(t =>
+    `<div class="type-pill${t === selectedType ? ' sel' : ''}" onclick="selType('${t}')">${t}</div>`
+  ).join('');
+
+  // Date = today
+  document.getElementById('fDate').value = new Date().toISOString().slice(0,10);
+  document.getElementById('fOpponent').value = '';
+  document.getElementById('fFor').value = '';
+  document.getElementById('fAgainst').value = '';
+
+  // Scorer grid
+  renderScorerGrid();
+
+  document.getElementById('modalBg').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function selType(t) {
+  selectedType = t;
+  document.querySelectorAll('.type-pill').forEach(el => {
+    el.classList.toggle('sel', el.textContent === t);
+  });
+}
+
+function renderScorerGrid() {
+  document.getElementById('scorerGrid').innerHTML = ROSTER
+    .filter(p => p.pos !== 'GK')
+    .map(p => `
+    <div class="scorer-row">
+      <span class="scorer-name"><strong>${p.shirt}</strong> <span style="font-weight:400;color:var(--muted)">#${p.num}</span></span>
+      <div class="scorer-num-ctrl">
+        <button class="goal-dec" onclick="adjustGoal(${p.id},-1)">−</button>
+        <span class="goal-count" id="gc-${p.id}">0</span>
+        <button class="goal-inc" onclick="adjustGoal(${p.id},1)">+</button>
+      </div>
+    </div>`).join('');
+}
+
+function adjustGoal(pid, delta) {
+  goalCounts[pid] = Math.max(0, (goalCounts[pid]||0) + delta);
+  const el = document.getElementById('gc-'+pid);
+  if (el) el.textContent = goalCounts[pid];
+}
+
+function closeModal() {
+  document.getElementById('modalBg').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function handleModalBg(e) {
+  if (e.target === document.getElementById('modalBg')) closeModal();
+}
+
+async function saveMatch() {
+  const opponent = document.getElementById('fOpponent').value.trim();
+  const date = document.getElementById('fDate').value;
+  const goalsFor = parseInt(document.getElementById('fFor').value) || 0;
+  const goalsAgainst = parseInt(document.getElementById('fAgainst').value) || 0;
+
+  if (!opponent || !date) { alert('Please fill in opponent and date.'); return; }
+
+  const scorers = Object.entries(goalCounts)
+    .filter(([,g]) => g > 0)
+    .map(([id, goals]) => ({ playerId: +id, goals }));
+
+  const newMatch = {
+    id: Date.now(),
+    date, type: selectedType, opponent, goalsFor, goalsAgainst, scorers
+  };
+
+  allMatches.push(newMatch);
+  closeModal();
+  renderMatches();
+  renderGoalTable();
+  await pushMatches();
+}
+
+// ─── INIT ─────────────────────────────────────
+fetchMatches();
+</script>
+</body>
+</html>
