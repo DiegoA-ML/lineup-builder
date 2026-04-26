@@ -19,7 +19,9 @@
 html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var(--font);-webkit-tap-highlight-color:transparent}
 
 .nav{display:flex;align-items:center;justify-content:space-between;padding:6px 12px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;gap:8px}
-.nav-title{font-size:16px;font-weight:700;letter-spacing:-.3px;flex-shrink:0}
+.nav-left{display:flex;align-items:center;gap:6px;min-width:0;flex:1}
+.nav-logo{height:36px;width:36px;object-fit:contain;flex-shrink:0}
+.nav-title{font-size:16px;font-weight:700;letter-spacing:-.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .nav-tabs{display:flex;gap:4px}
 .nav-tab{padding:6px 11px;font-family:var(--font);font-size:12px;font-weight:600;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:var(--muted);background:transparent;cursor:pointer;transition:all .15s;letter-spacing:.2px;white-space:nowrap}
 .nav-tab.on{background:var(--accent);color:#fff;border-color:transparent}
@@ -127,14 +129,14 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
 </div>
 
 <nav class="nav">
-  <div style="display:flex; align-items:center; gap:8px;">
-    <img src="logo.png" style="height:32px; width:32px; object-fit:contain;" onerror="this.style.display='none'">
+  <div class="nav-left">
+    <img src="logo.png" class="nav-logo" alt="Badge" onerror="this.style.display='none'">
     <span class="nav-title">Inter Milanesa</span>
   </div>
   <div class="nav-tabs">
     <a class="nav-tab" href="index.html">Lineup</a>
     <a class="nav-tab" href="matches.html">Matches</a>
-    <a class="nav-tab" href="players.html">Players</a>
+    <a class="nav-tab on" href="players.html">Players</a>
   </div>
 </nav>
 
@@ -147,8 +149,8 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
 <script>
 const BIN_ID  = '69e3d72836566621a8c96d0a';
 const API_KEY = '$2a$10$AJMfLQm2lz9YD23C35XrgO8VNu8T4B3tkHG7X6vVCEgm85UHsDVB6';
-const BASE = `https://api.jsonbin.io/v3/b/${69e3d72836566621a8c96d0a}`;
-const HEADERS = {'Content-Type':'application/json','X-Master-Key':$2a$10$AJMfLQm2lz9YD23C35XrgO8VNu8T4B3tkHG7X6vVCEgm85UHsDVB6};
+const BASE = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+const HEADERS = {'Content-Type':'application/json','X-Master-Key':API_KEY};
 
 const ROSTER = [
   {id:0,  name:'Fernando Garza',         shirt:'Garza',     num:'99',  pos:'GK'},
@@ -189,17 +191,23 @@ async function fetchData() {
 function computeStats() {
   const totalMatches = allMatches.length;
   ROSTER.forEach(p => {
-    let played = 0, goals = 0, assists = 0, yellows = 0, reds = 0, mvps = 0, cleanSheets = 0;
+    let played = 0, goals = 0, assists = 0, yellows = 0, reds = 0, mvps = 0;
     allMatches.forEach(m => {
       const attended = m.attendance?.includes(p.id);
-      if (attended) {
-        played++;
-        // Clean sheet logic: Only for GKs
-        if (p.pos === 'GK' && m.goalsAgainst === 0) cleanSheets++;
-      }
-      // ... (rest of the existing goal/card logic)
+      if (attended) played++;
+      (m.scorers||[]).forEach(s => {
+        if (s.playerId === p.id) goals += s.goals;
+        if (s.assists === p.id) assists++;
+      });
+      (m.cards||[]).forEach(c => {
+        if (c.playerId !== p.id) return;
+        if (c.type === 'Y') yellows++;
+        else if (c.type === 'R') reds++;
+        else if (c.type === 'DY') { yellows++; reds++; }
+      });
+      if (m.mvp === p.id) mvps++;
     });
-    stats[p.id] = {played, goals, assists, yellows, reds, mvps, cleanSheets, totalMatches};
+    stats[p.id] = {played, goals, assists, yellows, reds, mvps, totalMatches};
   });
 }
 
@@ -236,11 +244,6 @@ function openProfile(pid) {
   const p = ROSTER.find(r => r.id === pid);
   const s = stats[pid];
   const attPct = s.totalMatches > 0 ? Math.round((s.played/s.totalMatches)*100) : 0;
-
-  // --- NEW: Only create this box if the player is a GK ---
-  const gkStat = p.pos === 'GK' 
-    ? `<div class="ps-box"><span class="ps-val">${s.cleanSheets}</span><span class="ps-lbl">Clean Sheets</span></div>` 
-    : '';
 
   const sorted = [...allMatches].sort((a,b) => b.date.localeCompare(a.date));
 
@@ -280,7 +283,7 @@ function openProfile(pid) {
     <div class="profile-stats">
       <div class="ps-box"><span class="ps-val">${s.goals}</span><span class="ps-lbl">Goals</span></div>
       <div class="ps-box"><span class="ps-val">${s.assists}</span><span class="ps-lbl">Assists</span></div>
-      ${gkStat} <div class="ps-box"><span class="ps-val">${s.played}</span><span class="ps-lbl">Played</span></div>
+      <div class="ps-box"><span class="ps-val">${s.played}</span><span class="ps-lbl">Played</span></div>
       <div class="ps-box"><span class="ps-val">${s.yellows}</span><span class="ps-lbl">Yellows</span></div>
       <div class="ps-box"><span class="ps-val">${s.reds}</span><span class="ps-lbl">Reds</span></div>
       <div class="ps-box"><span class="ps-val">${s.mvps}</span><span class="ps-lbl">MVP</span></div>
@@ -302,7 +305,7 @@ function openProfile(pid) {
   document.getElementById('sheetBg').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
-  
+
 function closeProfile() {
   document.getElementById('sheetBg').classList.remove('open');
   document.body.style.overflow = '';

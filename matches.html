@@ -24,7 +24,9 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
   padding:6px 12px;background:var(--surface);
   border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;gap:8px;
 }
-.nav-title{font-size:16px;font-weight:700;letter-spacing:-.3px;flex-shrink:0}
+.nav-left{display:flex;align-items:center;gap:6px;min-width:0;flex:1}
+.nav-logo{height:36px;width:36px;object-fit:contain;flex-shrink:0}
+.nav-title{font-size:16px;font-weight:700;letter-spacing:-.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .nav-tabs{display:flex;gap:4px}
 .nav-tab{
   padding:6px 11px;font-family:var(--font);font-size:12px;font-weight:600;
@@ -376,13 +378,13 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
 </div>
 
 <nav class="nav">
-  <div style="display:flex; align-items:center; gap:8px;">
-    <img src="logo.png" style="height:32px; width:32px; object-fit:contain;" onerror="this.style.display='none'">
+  <div class="nav-left">
+    <img src="logo.png" class="nav-logo" alt="Badge" onerror="this.style.display='none'">
     <span class="nav-title">Inter Milanesa</span>
   </div>
   <div class="nav-tabs">
     <a class="nav-tab" href="index.html">Lineup</a>
-    <a class="nav-tab" href="matches.html">Matches</a>
+    <a class="nav-tab on" href="matches.html">Matches</a>
     <a class="nav-tab" href="players.html">Players</a>
   </div>
 </nav>
@@ -421,9 +423,9 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
 
 <script>
 // ─── CONFIG ───────────────────────────────────
-const BIN_ID  = 'PASTE_YOUR_BIN_ID_HERE';
-const API_KEY = 'PASTE_YOUR_API_KEY_HERE';
-const PASSWORD = 'thegameneverdies';
+const BIN_ID  = '69e3d72836566621a8c96d0a';
+const API_KEY = '$2a$10$AJMfLQm2lz9YD23C35XrgO8VNu8T4B3tkHG7X6vVCEgm85UHsDVB6';
+const PASSWORD = 'thegameneverdies'; // hack me if you must.
 // ──────────────────────────────────────────────
 
 const ROSTER = [
@@ -522,27 +524,9 @@ function renderAll() {
   renderMatches();
   renderGoalTable();
   renderAssistTable();
-  renderCleanSheetTable(); // New
   if (isUnlocked) setEditUI(true);
 }
 
-// Clean sheet table
-function renderCleanSheetTable() {
-  const totals = {};
-  allMatches.forEach(m => {
-    if (m.goalsAgainst === 0) {
-      // Find the GK in the roster (Fernando Garza, ID 0)
-      // Or check who was in the attendance and is a GK
-      ROSTER.filter(p => p.pos === 'GK').forEach(gk => {
-        if (m.attendance && m.attendance.includes(gk.id)) {
-          totals[gk.id] = (totals[gk.id] || 0) + 1;
-        }
-      });
-    }
-  });
-  renderStatTable('csTable', totals, '🧤', 'CS');
-}
-  
 // ─── NEXT FIXTURE ─────────────────────────────
 function renderFixture() {
   const el = document.getElementById('fixtureSection');
