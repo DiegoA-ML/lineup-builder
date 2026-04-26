@@ -522,16 +522,33 @@ function renderAll() {
   renderMatches();
   renderGoalTable();
   renderAssistTable();
+  renderCleanSheetTable(); // New
   if (isUnlocked) setEditUI(true);
 }
 
+// Clean sheet table
+function renderCleanSheetTable() {
+  const totals = {};
+  allMatches.forEach(m => {
+    if (m.goalsAgainst === 0) {
+      // Find the GK in the roster (Fernando Garza, ID 0)
+      // Or check who was in the attendance and is a GK
+      ROSTER.filter(p => p.pos === 'GK').forEach(gk => {
+        if (m.attendance && m.attendance.includes(gk.id)) {
+          totals[gk.id] = (totals[gk.id] || 0) + 1;
+        }
+      });
+    }
+  });
+  renderStatTable('csTable', totals, '🧤', 'CS');
+}
+  
 // ─── NEXT FIXTURE ─────────────────────────────
 function renderFixture() {
   const el = document.getElementById('fixtureSection');
   if (nextFixture) {
     el.innerHTML = `<div class="fixture-card">
       <div>
-        <div class="fixture-label">Next Match</div>
         <div class="fixture-opponent">vs ${nextFixture.opponent}</div>
         <div class="fixture-datetime">${formatDate(nextFixture.date)}${nextFixture.time ? ' · ' + nextFixture.time : ''}</div>
       </div>
