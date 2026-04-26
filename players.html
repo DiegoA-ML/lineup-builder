@@ -127,11 +127,14 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
 </div>
 
 <nav class="nav">
-  <span class="nav-title">⚽ Inter Milanesa</span>
+  <div style="display:flex; align-items:center; gap:8px;">
+    <img src="logo.png" style="height:32px; width:32px; object-fit:contain;" onerror="this.style.display='none'">
+    <span class="nav-title">Inter Milanesa</span>
+  </div>
   <div class="nav-tabs">
     <a class="nav-tab" href="index.html">Lineup</a>
     <a class="nav-tab" href="matches.html">Matches</a>
-    <a class="nav-tab on" href="players.html">Players</a>
+    <a class="nav-tab" href="players.html">Players</a>
   </div>
 </nav>
 
