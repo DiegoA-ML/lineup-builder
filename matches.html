@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Matches — Lineup Builder</title>
+<title>Matches — Inter Milanesa</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
 <style>
@@ -19,6 +18,149 @@
 }
 html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var(--font);-webkit-tap-highlight-color:transparent}
 
+/* NAV */
+.nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:6px 12px;background:var(--surface);
+  border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;gap:8px;
+}
+.nav-title{font-size:16px;font-weight:700;letter-spacing:-.3px;flex-shrink:0}
+.nav-tabs{display:flex;gap:4px}
+.nav-tab{
+  padding:6px 11px;font-family:var(--font);font-size:12px;font-weight:600;
+  border:1px solid var(--border);border-radius:8px;text-decoration:none;
+  color:var(--muted);background:transparent;cursor:pointer;
+  transition:all .15s;letter-spacing:.2px;white-space:nowrap;
+}
+.nav-tab.on{background:var(--accent);color:#fff;border-color:transparent}
+
+/* SECTIONS */
+.section{padding:14px 14px 0}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.section-label{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);text-transform:uppercase}
+.add-btn{
+  padding:7px 14px;background:var(--accent);color:#fff;
+  border:none;border-radius:8px;font-family:var(--font);font-size:13px;
+  font-weight:700;cursor:pointer;letter-spacing:.2px;transition:opacity .15s;
+}
+.add-btn:active{opacity:.8}
+
+/* NEXT FIXTURE CARD */
+.fixture-card{
+  background:linear-gradient(135deg,var(--accent) 0%,#0d4fc4 100%);
+  border-radius:14px;padding:16px;margin-bottom:14px;color:#fff;
+  display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 4px 16px rgba(26,110,245,.3);
+}
+.fixture-label{font-size:10px;font-weight:700;letter-spacing:1px;opacity:.75;text-transform:uppercase;margin-bottom:4px}
+.fixture-opponent{font-size:18px;font-weight:700}
+.fixture-datetime{font-size:13px;opacity:.85;margin-top:2px}
+.fixture-edit{
+  background:rgba(255,255,255,.2);border:none;border-radius:8px;
+  color:#fff;padding:6px 10px;font-size:12px;font-weight:700;cursor:pointer;
+  font-family:var(--font);flex-shrink:0;
+}
+.fixture-none{
+  background:var(--surface);border:1px dashed var(--border);
+  border-radius:14px;padding:14px;margin-bottom:14px;
+  text-align:center;color:var(--muted);font-size:13px;font-weight:500;cursor:pointer;
+}
+
+/* FORM STRIP */
+.form-strip{
+  display:flex;align-items:center;gap:6px;
+  background:var(--surface);border-radius:12px;border:1px solid var(--border);
+  padding:10px 14px;margin-bottom:14px;
+}
+.form-label-txt{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-right:4px}
+.form-dot{
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;color:#fff;flex-shrink:0;
+}
+.form-W{background:#27ae60}
+.form-D{background:#888}
+.form-L{background:#e74c3c}
+.form-empty{background:var(--border)}
+
+/* MATCH CARD */
+.match-card{
+  background:var(--surface);border-radius:12px;
+  border:1px solid var(--border);margin-bottom:10px;overflow:hidden;
+}
+.match-top{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer}
+.match-type{
+  font-size:10px;font-weight:700;padding:3px 8px;border-radius:5px;
+  letter-spacing:.5px;text-transform:uppercase;flex-shrink:0;
+}
+.type-Friendly{background:#e8f4fd;color:#0a5ec4}
+.type-League{background:#edf8ed;color:#1a7a1a}
+.type-Playoff{background:#fdf3e8;color:#b8600a}
+.type-Semi-final{background:#f5e8fd;color:#7a1aaa}
+.type-Final{background:#fde8e8;color:#c40a0a}
+.match-vs{flex:1;min-width:0}
+.match-opponent{font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.match-meta{font-size:11px;color:var(--muted);margin-top:2px;display:flex;gap:6px;align-items:center}
+.match-formation-badge{
+  font-size:10px;font-weight:700;background:var(--bg);
+  border:1px solid var(--border);border-radius:4px;padding:1px 5px;color:var(--muted);
+}
+.match-score{font-family:var(--font-num);font-size:22px;font-weight:700;letter-spacing:1px;flex-shrink:0}
+.score-W{color:#27ae60}.score-D{color:var(--muted)}.score-L{color:#e74c3c}
+.match-result-pill{font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0;letter-spacing:.5px}
+.pill-W{background:#edfaed;color:#1a7a1a}
+.pill-D{background:var(--bg);color:#888}
+.pill-L{background:#fdeaea;color:#c40a0a}
+
+/* MATCH BODY (expandable) */
+.match-body{display:none;border-top:1px solid var(--border);padding:10px 14px 12px}
+.match-body.open{display:block}
+.mb-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.mb-row:last-child{margin-bottom:0}
+.chip{
+  font-size:12px;font-weight:600;padding:3px 10px;
+  background:var(--bg);border:1px solid var(--border);
+  border-radius:20px;color:var(--text);display:flex;align-items:center;gap:4px;
+}
+.chip-goal{border-color:rgba(39,174,96,.4);background:#edfaed}
+.chip-assist{border-color:rgba(26,110,245,.3);background:#e8f4fd}
+.chip-mvp{border-color:rgba(243,156,18,.5);background:#fef9e7}
+.chip-Y{border-color:#f39c12;background:#fef9e7}
+.chip-R{border-color:#e74c3c;background:#fdeaea}
+.chip-DY{border-color:#e67e22;background:#fdf3e8}
+.mb-section{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;margin-top:8px}
+.mb-section:first-child{margin-top:0}
+.yt-link{
+  display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;
+  color:#e74c3c;text-decoration:none;padding:6px 10px;
+  background:#fdeaea;border-radius:8px;width:fit-content;
+}
+.attendance-wrap{display:flex;flex-wrap:wrap;gap:4px}
+.att-chip{
+  font-size:11px;font-weight:600;padding:2px 8px;border-radius:12px;
+  background:var(--bg);border:1px solid var(--border);color:var(--muted);
+}
+.att-chip.present{background:#edfaed;border-color:rgba(39,174,96,.4);color:#1a7a1a}
+.match-actions{display:flex;justify-content:flex-end;gap:6px;padding:8px 14px 10px;border-top:1px solid var(--border)}
+.edit-match-btn{font-size:11px;font-weight:600;padding:4px 10px;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--accent);cursor:pointer;font-family:var(--font)}
+.del-btn{font-size:11px;font-weight:600;padding:4px 10px;border:1px solid var(--border);border-radius:6px;background:transparent;color:#e74c3c;cursor:pointer;font-family:var(--font)}
+
+/* TABLES */
+.stat-table{background:var(--surface);border-radius:12px;border:1px solid var(--border);overflow:hidden;margin-bottom:14px}
+.g-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border)}
+.g-row:last-child{border-bottom:none}
+.g-rank{font-family:var(--font-num);font-size:14px;font-weight:700;color:var(--muted);width:22px;text-align:center;flex-shrink:0}
+.g-rank-1{color:#f39c12}.g-rank-2{color:#95a5a6}.g-rank-3{color:#c0835a}
+.g-num{width:34px;height:34px;border-radius:50%;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-size:13px;font-weight:700;flex-shrink:0}
+.g-info{flex:1;min-width:0}
+.g-shirt{font-size:14px;font-weight:700}
+.g-full{font-size:11px;color:var(--muted)}
+.g-stat{font-family:var(--font-num);font-size:20px;font-weight:700;flex-shrink:0}
+.g-stat-lbl{font-size:11px;color:var(--muted);margin-left:2px}
+.empty-state{text-align:center;padding:32px 20px;color:var(--muted);font-size:14px;font-weight:500}
+.loading{text-align:center;padding:32px;color:var(--muted);font-size:14px}
+.error-msg{background:#fdeaea;border:1px solid #f5b8b8;border-radius:10px;padding:14px;margin:12px 0;font-size:13px;color:#c40a0a;font-weight:500;text-align:center}
+
 /* EDIT FAB */
 .edit-fab{
   position:fixed;bottom:24px;right:20px;z-index:100;
@@ -32,317 +174,110 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
 .edit-fab.unlocked{background:#27ae60;box-shadow:0 4px 16px rgba(39,174,96,.35)}
 
 /* PASSWORD MODAL */
-.pw-modal-bg{
-  position:fixed;inset:0;background:rgba(0,0,0,.48);
-  z-index:300;display:flex;align-items:center;justify-content:center;padding:24px;
-  opacity:0;pointer-events:none;transition:opacity .2s;
-}
+.pw-modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.48);z-index:300;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .2s}
 .pw-modal-bg.open{opacity:1;pointer-events:all}
-.pw-card{
-  background:var(--surface);border-radius:16px;border:1px solid var(--border);
-  padding:28px 24px;width:100%;max-width:320px;text-align:center;
-}
+.pw-card{background:var(--surface);border-radius:16px;border:1px solid var(--border);padding:28px 24px;width:100%;max-width:320px;text-align:center}
 .pw-icon{font-size:32px;margin-bottom:10px}
 .pw-title{font-size:17px;font-weight:700;margin-bottom:4px}
 .pw-sub{font-size:13px;color:var(--muted);margin-bottom:18px}
-.pw-input{
-  width:100%;padding:11px 14px;border:1px solid var(--border);
-  border-radius:10px;background:var(--bg);color:var(--text);
-  font-family:var(--font);font-size:15px;text-align:center;
-  letter-spacing:2px;outline:none;margin-bottom:10px;
-  transition:border .15s;
-}
+.pw-input{width:100%;padding:11px 14px;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px;text-align:center;letter-spacing:2px;outline:none;margin-bottom:10px;transition:border .15s}
 .pw-input:focus{border-color:var(--accent)}
 .pw-input.shake{animation:shake .35s ease}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
-.pw-btn{
-  width:100%;padding:12px;background:var(--accent);color:#fff;
-  border:none;border-radius:10px;font-family:var(--font);
-  font-size:15px;font-weight:700;cursor:pointer;transition:opacity .15s;
-}
+.pw-btn{width:100%;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:10px;font-family:var(--font);font-size:15px;font-weight:700;cursor:pointer;transition:opacity .15s}
 .pw-btn:active{opacity:.8}
 .pw-err{font-size:12px;color:#e74c3c;margin-top:8px;min-height:18px;font-weight:600}
-.pw-cancel{
-  margin-top:12px;font-size:13px;color:var(--muted);
-  cursor:pointer;text-decoration:underline;display:block;
-}
+.pw-cancel{margin-top:12px;font-size:13px;color:var(--muted);cursor:pointer;text-decoration:underline;display:block}
 
-/* NAV */
-.nav{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:10px 16px;background:var(--surface);
-  border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;
-}
-.nav-title{font-size:18px;font-weight:700;letter-spacing:-.3px}
-.nav-tabs{display:flex;gap:4px}
-.nav-tab{
-  padding:6px 14px;font-family:var(--font);font-size:13px;font-weight:600;
-  border:1px solid var(--border);border-radius:8px;text-decoration:none;
-  color:var(--muted);background:transparent;cursor:pointer;
-  transition:all .15s;letter-spacing:.2px;
-}
-.nav-tab.on{background:var(--accent);color:#fff;border-color:transparent}
-
-/* SECTIONS */
-.section{padding:16px}
-.section-head{
-  display:flex;align-items:center;justify-content:space-between;margin-bottom:12px
-}
-.section-label{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);text-transform:uppercase}
-.add-btn{
-  padding:7px 16px;background:var(--accent);color:#fff;
-  border:none;border-radius:8px;font-family:var(--font);font-size:13px;
-  font-weight:700;cursor:pointer;letter-spacing:.2px;transition:opacity .15s;
-}
-.add-btn:active{opacity:.8}
-
-/* MATCH CARD */
-.match-card{
-  background:var(--surface);border-radius:12px;
-  border:1px solid var(--border);margin-bottom:10px;overflow:hidden;
-}
-.match-top{
-  display:flex;align-items:center;gap:10px;padding:12px 14px;
-}
-.match-type{
-  font-size:10px;font-weight:700;padding:3px 8px;border-radius:5px;
-  letter-spacing:.5px;text-transform:uppercase;flex-shrink:0;
-}
-.type-Friendly{background:#e8f4fd;color:#0a5ec4}
-.type-League{background:#edf8ed;color:#1a7a1a}
-.type-Playoff{background:#fdf3e8;color:#b8600a}
-.type-Semi-final{background:#f5e8fd;color:#7a1aaa}
-.type-Final{background:#fde8e8;color:#c40a0a}
-.match-vs{flex:1;min-width:0}
-.match-opponent{font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.match-date{font-size:11px;color:var(--muted);margin-top:1px}
-.match-score{
-  font-family:var(--font-num);font-size:22px;font-weight:700;
-  letter-spacing:1px;flex-shrink:0;
-}
-.score-W{color:#27ae60}.score-D{color:var(--muted)}.score-L{color:#e74c3c}
-.match-result-pill{
-  font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;
-  flex-shrink:0;letter-spacing:.5px;
-}
-.pill-W{background:#edfaed;color:#1a7a1a}
-.pill-D{background:#f0ede8;color:#888}
-.pill-L{background:#fdeaea;color:#c40a0a}
-.match-scorers{
-  display:flex;flex-wrap:wrap;gap:6px;
-  padding:8px 14px 12px;border-top:1px solid var(--border);
-}
-.scorer-chip{
-  font-size:12px;font-weight:600;padding:3px 10px;
-  background:var(--bg);border:1px solid var(--border);
-  border-radius:20px;color:var(--text);
-}
-.no-scorers{font-size:12px;color:var(--muted);padding:8px 14px 12px}
-.match-actions{
-  display:flex;justify-content:flex-end;gap:6px;
-  padding:0 14px 10px;
-}
-.del-btn{
-  font-size:11px;font-weight:600;padding:4px 10px;
-  border:1px solid var(--border);border-radius:6px;
-  background:transparent;color:#e74c3c;cursor:pointer;font-family:var(--font);
-}
-.del-btn:active{background:#fdeaea}
-
-/* GOALSCORER TABLE */
-.g-table{
-  background:var(--surface);border-radius:12px;
-  border:1px solid var(--border);overflow:hidden;
-}
-.g-row{
-  display:flex;align-items:center;gap:10px;
-  padding:10px 14px;border-bottom:1px solid var(--border);
-}
-.g-row:last-child{border-bottom:none}
-.g-rank{
-  font-family:var(--font-num);font-size:14px;font-weight:700;
-  color:var(--muted);width:20px;text-align:center;flex-shrink:0;
-}
-.g-rank-1{color:#f39c12}
-.g-rank-2{color:#95a5a6}
-.g-rank-3{color:#c0835a}
-.g-num{
-  width:34px;height:34px;border-radius:50%;
-  background:var(--bg);border:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--font-num);font-size:13px;font-weight:700;flex-shrink:0;
-}
-.g-info{flex:1;min-width:0}
-.g-shirt{font-size:14px;font-weight:700}
-.g-full{font-size:11px;color:var(--muted)}
-.g-goals{font-family:var(--font-num);font-size:20px;font-weight:700;flex-shrink:0}
-.g-ball{font-size:11px;color:var(--muted);margin-left:2px}
-.empty-state{
-  text-align:center;padding:40px 20px;color:var(--muted);
-  font-size:14px;font-weight:500;
-}
-
-/* LOADING */
-.loading{text-align:center;padding:40px;color:var(--muted);font-size:14px}
-.error-msg{
-  background:#fdeaea;border:1px solid #f5b8b8;border-radius:10px;
-  padding:14px;margin:12px 0;font-size:13px;color:#c40a0a;font-weight:500;
-  text-align:center;
-}
-
-/* MODAL */
-.modal-bg{
-  position:fixed;inset:0;background:rgba(0,0,0,.48);
-  z-index:200;display:flex;align-items:flex-end;
-  opacity:0;pointer-events:none;transition:opacity .25s;
-}
+/* MAIN MODAL (add/edit match + next fixture) */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.48);z-index:200;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity .25s}
 .modal-bg.open{opacity:1;pointer-events:all}
-.modal{
-  background:var(--surface);border-radius:20px 20px 0 0;
-  width:100%;max-height:90vh;display:flex;flex-direction:column;
-  transform:translateY(100%);transition:transform .28s cubic-bezier(.32,1,.56,1);
-}
+.modal{background:var(--surface);border-radius:20px 20px 0 0;width:100%;max-height:92vh;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .28s cubic-bezier(.32,1,.56,1)}
 .modal-bg.open .modal{transform:translateY(0)}
 .modal-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:10px auto 0;flex-shrink:0}
-.modal-head{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:12px 16px 10px;border-bottom:1px solid var(--border);flex-shrink:0;
-}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 10px;border-bottom:1px solid var(--border);flex-shrink:0}
 .modal-title{font-size:15px;font-weight:700}
-.modal-close{
-  width:28px;height:28px;border-radius:50%;border:none;
-  background:var(--bg);color:var(--muted);cursor:pointer;font-size:14px;
-  display:flex;align-items:center;justify-content:center;
-}
+.modal-close{width:28px;height:28px;border-radius:50%;border:none;background:var(--bg);color:var(--muted);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center}
 .modal-body{overflow-y:auto;flex:1;padding:16px}
+.modal-footer{padding:12px 16px;border-top:1px solid var(--border);flex-shrink:0;display:flex;gap:8px}
+.save-btn{flex:1;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:10px;font-family:var(--font);font-size:15px;font-weight:700;cursor:pointer;transition:opacity .15s}
+.save-btn:active{opacity:.8}
+.cancel-btn{padding:12px 18px;border:1px solid var(--border);border-radius:10px;background:transparent;color:var(--muted);font-family:var(--font);font-size:15px;font-weight:600;cursor:pointer}
+
+/* FORM ELEMENTS */
 .form-group{margin-bottom:16px}
 .form-label{font-size:12px;font-weight:700;letter-spacing:.5px;color:var(--muted);text-transform:uppercase;margin-bottom:6px;display:block}
-.form-input,.form-select{
-  width:100%;padding:10px 12px;border:1px solid var(--border);
-  border-radius:8px;background:var(--bg);color:var(--text);
-  font-family:var(--font);font-size:14px;outline:none;
-  transition:border .15s;
-}
+.form-input,.form-select{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;outline:none;transition:border .15s}
 .form-input:focus,.form-select:focus{border-color:var(--accent)}
 .score-row{display:flex;gap:12px}
 .score-row .form-group{flex:1}
 .type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-.type-pill{
-  padding:8px 4px;text-align:center;border:1px solid var(--border);
-  border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;
-  background:var(--surface);color:var(--muted);transition:all .15s;
-  letter-spacing:.2px;
-}
+.type-pill{padding:8px 4px;text-align:center;border:1px solid var(--border);border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;background:var(--surface);color:var(--muted);transition:all .15s;letter-spacing:.2px}
 .type-pill.sel{border-color:var(--accent);color:var(--accent);background:rgba(26,110,245,.08)}
-.scorer-grid{display:flex;flex-direction:column;gap:4px;max-height:260px;overflow-y:auto}
-.scorer-row{
-  display:flex;align-items:center;gap:10px;
-  padding:8px 10px;border-radius:8px;border:1px solid var(--border);
-  background:var(--surface);
-}
+.form-divider{height:1px;background:var(--border);margin:18px 0}
+.form-section-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px}
+
+/* SCORER ROWS */
+.scorer-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);margin-bottom:6px}
 .scorer-name{flex:1;font-size:13px;font-weight:600}
-.scorer-num-ctrl{display:flex;align-items:center;gap:6px}
-.goal-dec,.goal-inc{
-  width:28px;height:28px;border-radius:6px;border:1px solid var(--border);
-  background:var(--bg);color:var(--text);font-size:16px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;font-weight:700;
-  transition:background .1s;
-}
-.goal-dec:active,.goal-inc:active{background:var(--border)}
-.goal-count{font-family:var(--font-num);font-size:16px;font-weight:700;width:18px;text-align:center}
-.modal-footer{
-  padding:12px 16px;border-top:1px solid var(--border);flex-shrink:0;
-  display:flex;gap:8px;
-}
-.save-btn{
-  flex:1;padding:12px;background:var(--accent);color:#fff;
-  border:none;border-radius:10px;font-family:var(--font);
-  font-size:15px;font-weight:700;cursor:pointer;transition:opacity .15s;
-}
-.save-btn:active{opacity:.8}
-.cancel-btn{
-  padding:12px 18px;border:1px solid var(--border);border-radius:10px;
-  background:transparent;color:var(--muted);font-family:var(--font);
-  font-size:15px;font-weight:600;cursor:pointer;
-}
+.scorer-num-ctrl{display:flex;align-items:center;gap:5px}
+.goal-dec,.goal-inc{width:26px;height:26px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700}
+.goal-count{font-family:var(--font-num);font-size:15px;font-weight:700;width:16px;text-align:center}
+.assist-toggle{font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--muted);cursor:pointer;white-space:nowrap;transition:all .15s}
+.assist-toggle.on{background:#e8f4fd;border-color:rgba(26,110,245,.4);color:var(--accent)}
+
+/* ATTENDANCE */
+.att-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.att-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:8px;cursor:pointer;background:var(--surface);transition:all .15s}
+.att-item.checked{background:#edfaed;border-color:rgba(39,174,96,.4)}
+.att-check{width:18px;height:18px;border-radius:4px;border:1.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .15s}
+.att-item.checked .att-check{background:#27ae60;border-color:#27ae60;color:#fff}
+.att-name{font-size:12px;font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* CARDS */
+.card-row{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);margin-bottom:6px}
+.card-name{flex:1;font-size:13px;font-weight:600}
+.card-opts{display:flex;gap:4px}
+.card-opt{font-size:11px;font-weight:700;padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--muted);cursor:pointer;transition:all .15s;letter-spacing:.3px}
+.card-opt.sel-Y{background:#fef9e7;border-color:#f39c12;color:#c47d0a}
+.card-opt.sel-R{background:#fdeaea;border-color:#e74c3c;color:#c40a0a}
+.card-opt.sel-DY{background:#fdf3e8;border-color:#e67e22;color:#b8600a}
+
+/* MVP */
+.mvp-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.mvp-item{padding:8px 10px;border:1px solid var(--border);border-radius:8px;cursor:pointer;background:var(--surface);font-size:13px;font-weight:600;text-align:center;transition:all .15s;color:var(--text)}
+.mvp-item.sel{background:#fef9e7;border-color:#f39c12;color:#c47d0a}
+.mvp-none{grid-column:1/-1;text-align:center;font-size:13px;font-weight:600;color:var(--muted);padding:6px;cursor:pointer;border:1px solid var(--border);border-radius:8px;background:var(--surface)}
+.mvp-none.sel{background:var(--bg);border-color:var(--text)}
+
+.pb-safe{height:100px}
 </style>
 </head>
 <body>
 
-<!-- PASSWORD MODAL (shown only when Edit tapped) -->
+<!-- PASSWORD MODAL -->
 <div class="pw-modal-bg" id="pwModalBg" onclick="handlePwBg(event)">
   <div class="pw-card">
     <div class="pw-icon">🔒</div>
     <div class="pw-title">Team editors only</div>
     <div class="pw-sub">Enter the password to add or edit matches</div>
-    <input class="pw-input" id="pwInput" type="password"
-      placeholder="••••••••" maxlength="30"
-      onkeydown="if(event.key==='Enter')tryUnlock()">
+    <input class="pw-input" id="pwInput" type="password" placeholder="••••••••" maxlength="30" onkeydown="if(event.key==='Enter')tryUnlock()">
     <button class="pw-btn" onclick="tryUnlock()">Unlock</button>
     <div class="pw-err" id="pwErr"></div>
     <span class="pw-cancel" onclick="closePwModal()">Cancel</span>
   </div>
 </div>
 
-<!-- EDIT FAB -->
-<button class="edit-fab" id="editFab" onclick="onEditFab()">✏️ Edit</button>
-
-<nav class="nav">
-  <span class="nav-title">⚽ Records</span>
-  <div class="nav-tabs">
-    <a class="nav-tab" href="index.html">Lineup</a>
-    <a class="nav-tab on" href="matches.html">Matches</a>
-  </div>
-</nav>
-
-<!-- TAB: MATCHES -->
-<div id="tabMatches">
-  <div class="section">
-    <div class="section-head">
-      <span class="section-label">Match History</span>
-      <button class="add-btn" style="display:none" onclick="openModal()">+ Add Match</button>
-    </div>
-    <div id="configWarning" class="error-msg" style="display:none">
-      ⚠️ JSONBin not configured yet — see setup instructions below.
-    </div>
-    <div id="matchList"><div class="loading">Loading matches…</div></div>
-  </div>
-
-  <div class="section">
-    <div class="section-head">
-      <span class="section-label">Goalscorer Table</span>
-    </div>
-    <div id="goalTable"><div class="loading">…</div></div>
-  </div>
-
-  <!-- SETUP INSTRUCTIONS (hidden once configured) -->
-  <div class="section" id="setupSection" style="display:none">
-    <div style="background:var(--surface);border-radius:12px;border:1px solid var(--border);padding:16px">
-      <p style="font-size:13px;font-weight:700;margin-bottom:10px">📋 One-time setup (5 min)</p>
-      <ol style="font-size:13px;color:var(--muted);line-height:2;padding-left:18px">
-        <li>Go to <strong style="color:var(--text)">jsonbin.io</strong> → Sign up free</li>
-        <li>Click <strong style="color:var(--text)">Create Bin</strong></li>
-        <li>Paste the starter JSON shown below, click <strong style="color:var(--text)">Create</strong></li>
-        <li>Copy the <strong style="color:var(--text)">BIN ID</strong> from the URL</li>
-        <li>Go to <strong style="color:var(--text)">API Keys</strong> → copy your key</li>
-        <li>Open <strong style="color:var(--text)">matches.html</strong> in VS Code, fill in the two values at the top of the script</li>
-      </ol>
-      <div style="margin-top:12px;background:var(--bg);border-radius:8px;padding:12px;font-family:monospace;font-size:11px;color:var(--muted);word-break:break-all;line-height:1.6">
-        {"matches":[{"id":1,"date":"2026-04-18","type":"Friendly","opponent":"Campeones Kalcho","goalsFor":3,"goalsAgainst":4,"scorers":[{"playerId":11,"goals":2},{"playerId":5,"goals":1}]}]}
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ADD MATCH MODAL -->
+<!-- MAIN MODAL (add/edit match) -->
 <div class="modal-bg" id="modalBg" onclick="handleModalBg(event)">
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-head">
-      <span class="modal-title">Add Match</span>
+      <span class="modal-title" id="modalTitle">Add Match</span>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
-    <div class="modal-body">
+    <div class="modal-body" id="modalBody">
+      <!-- Match Info -->
       <div class="form-group">
         <label class="form-label">Match Type</label>
         <div class="type-grid" id="typeGrid"></div>
@@ -351,9 +286,15 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
         <label class="form-label">Opponent</label>
         <input class="form-input" id="fOpponent" placeholder="e.g. Campeones Kalcho" maxlength="40">
       </div>
-      <div class="form-group">
-        <label class="form-label">Date</label>
-        <input class="form-input" id="fDate" type="date">
+      <div class="score-row">
+        <div class="form-group">
+          <label class="form-label">Date</label>
+          <input class="form-input" id="fDate" type="date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Time</label>
+          <input class="form-input" id="fTime" type="time">
+        </div>
       </div>
       <div class="score-row">
         <div class="form-group">
@@ -366,9 +307,35 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
         </div>
       </div>
       <div class="form-group">
-        <label class="form-label">Goal Scorers</label>
-        <div class="scorer-grid" id="scorerGrid"></div>
+        <label class="form-label">Formation Played</label>
+        <select class="form-select" id="fFormation">
+          <option value="">— not recorded —</option>
+          <option>2-3-1</option><option>3-2-1</option><option>2-2-2</option>
+          <option>1-3-2</option><option>3-1-2</option>
+          <option>4-4-2</option><option>4-3-3</option><option>4-2-3-1</option>
+          <option>3-5-2</option><option>3-4-3</option><option>4-1-4-1</option><option>5-3-2</option>
+        </select>
       </div>
+      <div class="form-group">
+        <label class="form-label">YouTube Link <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+        <input class="form-input" id="fYoutube" placeholder="https://youtube.com/..." type="url">
+      </div>
+
+      <div class="form-divider"></div>
+      <div class="form-section-title">⚽ Goal Scorers &amp; Assists</div>
+      <div id="scorerGrid"></div>
+
+      <div class="form-divider"></div>
+      <div class="form-section-title">✅ Attendance</div>
+      <div class="att-grid" id="attGrid"></div>
+
+      <div class="form-divider"></div>
+      <div class="form-section-title">🟨 Cards</div>
+      <div id="cardGrid"></div>
+
+      <div class="form-divider"></div>
+      <div class="form-section-title">⭐ MVP <span style="font-size:12px;font-weight:400;color:var(--muted)">(optional)</span></div>
+      <div class="mvp-grid" id="mvpGrid"></div>
     </div>
     <div class="modal-footer">
       <button class="cancel-btn" onclick="closeModal()">Cancel</button>
@@ -377,89 +344,84 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
   </div>
 </div>
 
+<!-- FIXTURE MODAL -->
+<div class="modal-bg" id="fixtureBg" onclick="if(event.target===this)closeFixtureModal()">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-head">
+      <span class="modal-title">Next Fixture</span>
+      <button class="modal-close" onclick="closeFixtureModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Opponent</label>
+        <input class="form-input" id="ffOpponent" placeholder="e.g. Campeones Kalcho" maxlength="40">
+      </div>
+      <div class="score-row">
+        <div class="form-group">
+          <label class="form-label">Date</label>
+          <input class="form-input" id="ffDate" type="date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Time</label>
+          <input class="form-input" id="ffTime" type="time">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="cancel-btn" onclick="closeFixtureModal()">Cancel</button>
+      <button class="save-btn" onclick="saveFixture()">Save Fixture</button>
+    </div>
+  </div>
+</div>
+
+<nav class="nav">
+  <span class="nav-title">⚽ Inter Milanesa</span>
+  <div class="nav-tabs">
+    <a class="nav-tab" href="index.html">Lineup</a>
+    <a class="nav-tab on" href="matches.html">Matches</a>
+    <a class="nav-tab" href="players.html">Players</a>
+  </div>
+</nav>
+
+<div style="padding:14px 14px 0" id="mainContent">
+  <!-- Next Fixture -->
+  <div id="fixtureSection"></div>
+
+  <!-- Form Strip -->
+  <div id="formStrip"></div>
+
+  <!-- Match History -->
+  <div class="section-head">
+    <span class="section-label">Match History</span>
+    <button class="add-btn" id="addMatchBtn" onclick="openModal(null)" style="display:none">+ Add Match</button>
+  </div>
+  <div id="matchList"><div class="loading">Loading…</div></div>
+
+  <!-- Goalscorer Table -->
+  <div class="section-head" style="margin-top:18px">
+    <span class="section-label">Top Scorers</span>
+  </div>
+  <div id="goalTable"></div>
+
+  <!-- Assists Table -->
+  <div class="section-head" style="margin-top:18px">
+    <span class="section-label">Top Assists</span>
+  </div>
+  <div id="assistTable"></div>
+
+  <div class="pb-safe"></div>
+</div>
+
+<!-- EDIT FAB -->
+<button class="edit-fab" id="editFab" onclick="onEditFab()">✏️ Edit</button>
+
 <script>
-// ─────────────────────────────────────────────
-// ⚙️  CONFIGURE THESE TWO VALUES
-//     After following the setup instructions below
-// ─────────────────────────────────────────────
-const BIN_ID  = '69e3d72836566621a8c96d0a';
-const API_KEY = '$2a$10$AJMfLQm2lz9YD23C35XrgO8VNu8T4B3tkHG7X6vVCEgm85UHsDVB6';
+// ─── CONFIG ───────────────────────────────────
+const BIN_ID  = 'PASTE_YOUR_BIN_ID_HERE';
+const API_KEY = 'PASTE_YOUR_API_KEY_HERE';
 const PASSWORD = 'thegameneverdies';
-// Yes, the Key and Password are available in my repo. No, I'm not dumb. If someone wants to delete me and my friend's 7-a-side 
-// futbol page data, and assuming that is you, and you are reading this, then you have gone through great lengths and deserve
-// the small satisfaction of doing so. I am not encrypting any of this that would be too much and I need the repo website to be public
-// for my friends. Anyhow, I have everything backed in a private repo with a different Key and Password ;)
-// ─────────────────────────────────────────────
-
-// ─── AUTH ─────────────────────────────────────
-let isUnlocked = sessionStorage.getItem('tgnd_auth') === '1';
-
-function onEditFab() {
-  if (isUnlocked) {
-    // Already unlocked — toggle edit controls visibility
-    const anyVisible = document.querySelector('.add-btn') &&
-      document.querySelector('.add-btn').style.display !== 'none';
-    setEditUI(!anyVisible);
-  } else {
-    openPwModal();
-  }
-}
-
-function openPwModal() {
-  document.getElementById('pwInput').value = '';
-  document.getElementById('pwErr').textContent = '';
-  document.getElementById('pwModalBg').classList.add('open');
-  setTimeout(() => document.getElementById('pwInput').focus(), 100);
-}
-
-function closePwModal() {
-  document.getElementById('pwModalBg').classList.remove('open');
-}
-
-function handlePwBg(e) {
-  if (e.target === document.getElementById('pwModalBg')) closePwModal();
-}
-
-function tryUnlock() {
-  const val = document.getElementById('pwInput').value;
-  if (val === PASSWORD) {
-    isUnlocked = true;
-    sessionStorage.setItem('tgnd_auth', '1');
-    closePwModal();
-    setEditUI(true);
-    const fab = document.getElementById('editFab');
-    fab.textContent = '✅ Editing';
-    fab.classList.add('unlocked');
-  } else {
-    const inp = document.getElementById('pwInput');
-    document.getElementById('pwErr').textContent = 'Wrong password';
-    inp.classList.remove('shake');
-    void inp.offsetWidth;
-    inp.classList.add('shake');
-    inp.value = '';
-  }
-}
-
-function setEditUI(show) {
-  document.querySelectorAll('.add-btn, .del-btn, .sheet-clear').forEach(el => {
-    el.style.display = show ? '' : 'none';
-  });
-  const fab = document.getElementById('editFab');
-  if (isUnlocked) {
-    fab.textContent = show ? '✅ Editing' : '✏️ Edit';
-    fab.classList.toggle('unlocked', show);
-  }
-}
-
-// On load: always hide edit controls, show them only if already authenticated
-document.addEventListener('DOMContentLoaded', () => {
-  setEditUI(isUnlocked);
-  if (isUnlocked) {
-    const fab = document.getElementById('editFab');
-    fab.textContent = '✅ Editing';
-    fab.classList.add('unlocked');
-  }
-});
+// ──────────────────────────────────────────────
 
 const ROSTER = [
   {id:0,  name:'Fernando Garza',         shirt:'Garza',     num:'99',  pos:'GK'},
@@ -477,229 +439,471 @@ const ROSTER = [
 ];
 
 const MATCH_TYPES = ['Friendly','League','Playoff','Semi-final','Final'];
-
-const isConfigured = () => BIN_ID !== 'PASTE_YOUR_BIN_ID_HERE' && API_KEY !== 'PASTE_YOUR_API_KEY_HERE';
-
+const isConfigured = () => BIN_ID !== 'PASTE_YOUR_BIN_ID_HERE';
 const BASE = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
-const HEADERS = { 'Content-Type':'application/json', 'X-Master-Key': API_KEY };
+const HEADERS = {'Content-Type':'application/json','X-Master-Key':API_KEY};
 
 let allMatches = [];
-let goalCounts = {}; // scorerGoals form state
+let nextFixture = null;
+
+// ─── AUTH ─────────────────────────────────────
+let isUnlocked = sessionStorage.getItem('tgnd_auth') === '1';
+
+function onEditFab() {
+  if (isUnlocked) {
+    const btn = document.getElementById('addMatchBtn');
+    const show = btn.style.display === 'none';
+    setEditUI(show);
+  } else {
+    openPwModal();
+  }
+}
+function openPwModal() {
+  document.getElementById('pwInput').value = '';
+  document.getElementById('pwErr').textContent = '';
+  document.getElementById('pwModalBg').classList.add('open');
+  setTimeout(() => document.getElementById('pwInput').focus(), 100);
+}
+function closePwModal() { document.getElementById('pwModalBg').classList.remove('open'); }
+function handlePwBg(e) { if (e.target === document.getElementById('pwModalBg')) closePwModal(); }
+function tryUnlock() {
+  if (document.getElementById('pwInput').value === PASSWORD) {
+    isUnlocked = true;
+    sessionStorage.setItem('tgnd_auth','1');
+    closePwModal();
+    setEditUI(true);
+    const fab = document.getElementById('editFab');
+    fab.textContent = '✅ Editing';
+    fab.classList.add('unlocked');
+  } else {
+    const inp = document.getElementById('pwInput');
+    document.getElementById('pwErr').textContent = 'Wrong password';
+    inp.classList.remove('shake'); void inp.offsetWidth; inp.classList.add('shake'); inp.value = '';
+  }
+}
+function setEditUI(show) {
+  document.getElementById('addMatchBtn').style.display = show ? '' : 'none';
+  document.querySelectorAll('.del-btn,.edit-match-btn,.fixture-edit').forEach(el => el.style.display = show ? '' : 'none');
+  const fab = document.getElementById('editFab');
+  if (isUnlocked) { fab.textContent = show ? '✅ Editing' : '✏️ Edit'; fab.classList.toggle('unlocked', show); }
+}
 
 // ─── API ──────────────────────────────────────
-async function fetchMatches() {
+async function fetchData() {
   if (!isConfigured()) {
-    document.getElementById('configWarning').style.display = 'block';
-    document.getElementById('setupSection').style.display = 'block';
-    // Show the first match from starter data anyway
-    allMatches = [{id:1,date:'2026-04-18',type:'Friendly',opponent:'Campeones Kalcho',goalsFor:3,goalsAgainst:4,scorers:[{playerId:11,goals:2},{playerId:5,goals:1}]}];
-    renderMatches();
-    renderGoalTable();
+    allMatches = [{id:1,date:'2026-04-18',type:'Friendly',opponent:'Campeones Kalcho',goalsFor:3,goalsAgainst:4,scorers:[{playerId:11,goals:2,assists:0},{playerId:5,goals:1,assists:0}]}];
+    nextFixture = null;
+    renderAll();
     return;
   }
   try {
-    const r = await fetch(BASE + '/latest', { headers: HEADERS });
+    const r = await fetch(BASE + '/latest', {headers: HEADERS});
     const data = await r.json();
     allMatches = data.record.matches || [];
-    renderMatches();
-    renderGoalTable();
+    nextFixture = data.record.nextFixture || null;
+    renderAll();
   } catch(e) {
-    document.getElementById('matchList').innerHTML =
-      '<div class="error-msg">Could not load matches. Check your BIN_ID and API_KEY.</div>';
+    document.getElementById('matchList').innerHTML = '<div class="error-msg">Could not load data. Check BIN_ID and API_KEY.</div>';
   }
 }
 
-async function pushMatches() {
+async function pushData() {
   if (!isConfigured()) return;
-  await fetch(BASE, {
-    method:'PUT',
-    headers: HEADERS,
-    body: JSON.stringify({ matches: allMatches })
-  });
+  await fetch(BASE, {method:'PUT', headers: HEADERS, body: JSON.stringify({matches: allMatches, nextFixture})});
 }
 
-// ─── RENDER MATCHES ───────────────────────────
-function getResult(m) {
-  if (m.goalsFor > m.goalsAgainst) return 'W';
-  if (m.goalsFor < m.goalsAgainst) return 'L';
-  return 'D';
+// ─── RENDER ALL ───────────────────────────────
+function renderAll() {
+  renderFixture();
+  renderFormStrip();
+  renderMatches();
+  renderGoalTable();
+  renderAssistTable();
+  if (isUnlocked) setEditUI(true);
 }
 
+// ─── NEXT FIXTURE ─────────────────────────────
+function renderFixture() {
+  const el = document.getElementById('fixtureSection');
+  if (nextFixture) {
+    el.innerHTML = `<div class="fixture-card">
+      <div>
+        <div class="fixture-label">Next Match</div>
+        <div class="fixture-opponent">vs ${nextFixture.opponent}</div>
+        <div class="fixture-datetime">${formatDate(nextFixture.date)}${nextFixture.time ? ' · ' + nextFixture.time : ''}</div>
+      </div>
+      <button class="fixture-edit" onclick="openFixtureModal()" style="display:none">Edit</button>
+    </div>`;
+  } else {
+    el.innerHTML = `<div class="fixture-none add-btn" onclick="isUnlocked && openFixtureModal()" id="fixturePlaceholder" style="display:none">+ Add Next Fixture</div>`;
+  }
+}
+
+function openFixtureModal() {
+  document.getElementById('ffOpponent').value = nextFixture?.opponent || '';
+  document.getElementById('ffDate').value = nextFixture?.date || '';
+  document.getElementById('ffTime').value = nextFixture?.time || '';
+  document.getElementById('fixtureBg').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeFixtureModal() {
+  document.getElementById('fixtureBg').classList.remove('open');
+  document.body.style.overflow = '';
+}
+async function saveFixture() {
+  const opp = document.getElementById('ffOpponent').value.trim();
+  const date = document.getElementById('ffDate').value;
+  if (!opp || !date) { alert('Please fill in opponent and date.'); return; }
+  nextFixture = {opponent: opp, date, time: document.getElementById('ffTime').value};
+  closeFixtureModal();
+  renderFixture();
+  if (isUnlocked) setEditUI(true);
+  await pushData();
+}
+
+// ─── FORM STRIP ───────────────────────────────
+function renderFormStrip() {
+  const el = document.getElementById('formStrip');
+  const last5 = [...allMatches].sort((a,b) => b.date.localeCompare(a.date)).slice(0,5).reverse();
+  if (!last5.length) { el.innerHTML = ''; return; }
+  const dots = last5.map(m => {
+    const r = getResult(m);
+    return `<div class="form-dot form-${r}">${r}</div>`;
+  }).join('');
+  // pad to 5 if fewer
+  const empty = Array(5 - last5.length).fill('<div class="form-dot form-empty"></div>').join('');
+  el.innerHTML = `<div class="form-strip">${empty}<span class="form-label-txt">Form</span>${dots}</div>`;
+}
+
+// ─── MATCH CARDS ──────────────────────────────
 function renderMatches() {
   const el = document.getElementById('matchList');
-  if (!allMatches.length) {
-    el.innerHTML = '<div class="empty-state">No matches yet. Add your first one!</div>';
-    return;
-  }
+  if (!allMatches.length) { el.innerHTML = '<div class="empty-state">No matches yet. Add your first one!</div>'; return; }
   const sorted = [...allMatches].sort((a,b) => b.date.localeCompare(a.date));
-  el.innerHTML = sorted.map(m => {
-    const res = getResult(m);
-    const scorerChips = m.scorers && m.scorers.length
-      ? m.scorers.map(s => {
-          const p = ROSTER.find(r => r.id === s.playerId);
-          if (!p) return '';
-          const g = s.goals > 1 ? ` x${s.goals}` : '';
-          return `<span class="scorer-chip">${p.shirt}${g}</span>`;
-        }).join('')
-      : null;
-    return `<div class="match-card">
-      <div class="match-top">
-        <span class="match-type type-${m.type.replace(' ','-')}">${m.type}</span>
-        <div class="match-vs">
-          <div class="match-opponent">vs ${m.opponent}</div>
-          <div class="match-date">${formatDate(m.date)}</div>
-        </div>
-        <span class="match-score score-${res}">${m.goalsFor}–${m.goalsAgainst}</span>
-        <span class="match-result-pill pill-${res}">${res}</span>
+  el.innerHTML = sorted.map(m => buildMatchCard(m)).join('');
+}
+
+function buildMatchCard(m) {
+  const res = getResult(m);
+  const timeStr = m.time ? ` · ${m.time}` : '';
+  const formationBadge = m.formation ? `<span class="match-formation-badge">${m.formation}</span>` : '';
+
+  // scorers
+  let scorerHtml = '';
+  if (m.scorers && m.scorers.length) {
+    const chips = m.scorers.map(s => {
+      const p = ROSTER.find(r => r.id === s.playerId);
+      if (!p) return '';
+      const gStr = s.goals > 1 ? ` x${s.goals}` : '';
+      let html = `<span class="chip chip-goal">⚽ ${p.shirt}${gStr}</span>`;
+      if (s.assists) html += `<span class="chip chip-assist">🅰️ ${ROSTER.find(r => r.id === s.assists)?.shirt || '?'}</span>`;
+      return html;
+    }).join('');
+    scorerHtml = `<div class="mb-section">Goals</div><div class="mb-row">${chips}</div>`;
+  }
+
+  // MVP
+  let mvpHtml = '';
+  if (m.mvp !== null && m.mvp !== undefined) {
+    const p = ROSTER.find(r => r.id === m.mvp);
+    if (p) mvpHtml = `<div class="mb-row"><span class="chip chip-mvp">⭐ ${p.shirt}</span></div>`;
+  }
+
+  // cards
+  let cardHtml = '';
+  if (m.cards && m.cards.length) {
+    const cardChips = m.cards.map(c => {
+      const p = ROSTER.find(r => r.id === c.playerId);
+      if (!p) return '';
+      const icon = c.type === 'Y' ? '🟨' : c.type === 'R' ? '🟥' : '🟨🟥';
+      return `<span class="chip chip-${c.type}">${icon} ${p.shirt}</span>`;
+    }).join('');
+    cardHtml = `<div class="mb-section">Cards</div><div class="mb-row">${cardChips}</div>`;
+  }
+
+  // attendance
+  let attHtml = '';
+  if (m.attendance && m.attendance.length) {
+    const chips = ROSTER.map(p => {
+      const present = m.attendance.includes(p.id);
+      return `<span class="att-chip${present ? ' present' : ''}">${p.shirt}</span>`;
+    }).join('');
+    attHtml = `<div class="mb-section">Attendance (${m.attendance.length}/${ROSTER.length})</div><div class="attendance-wrap">${chips}</div>`;
+  }
+
+  // youtube
+  let ytHtml = '';
+  if (m.youtube) ytHtml = `<div style="margin-top:8px"><a class="yt-link" href="${m.youtube}" target="_blank">▶ Watch Match</a></div>`;
+
+  const hasBody = scorerHtml || mvpHtml || cardHtml || attHtml || ytHtml;
+
+  return `<div class="match-card">
+    <div class="match-top" onclick="toggleCard(${m.id})">
+      <span class="match-type type-${m.type.replace(' ','-')}">${m.type}</span>
+      <div class="match-vs">
+        <div class="match-opponent">vs ${m.opponent}</div>
+        <div class="match-meta">${formatDate(m.date)}${timeStr} ${formationBadge}</div>
       </div>
-      ${scorerChips
-        ? `<div class="match-scorers">${scorerChips}</div>`
-        : `<div class="no-scorers">No goals registered</div>`}
+      <span class="match-score score-${res}">${m.goalsFor}–${m.goalsAgainst}</span>
+      <span class="match-result-pill pill-${res}">${res}</span>
+    </div>
+    ${hasBody ? `<div class="match-body" id="mb-${m.id}">
+      ${scorerHtml}${mvpHtml}${cardHtml}${attHtml}${ytHtml}
       <div class="match-actions">
-        <button class="del-btn" style="display:none" onclick="deleteMatch(${m.id})">Delete</button>
+        <button class="edit-match-btn" onclick="openModal(${m.id})" style="display:none">✏️ Edit</button>
+        <button class="del-btn" onclick="deleteMatch(${m.id})" style="display:none">Delete</button>
       </div>
-    </div>`;
-  }).join('');
+    </div>` : `<div class="match-actions" style="display:none" id="mb-actions-${m.id}">
+        <button class="edit-match-btn" onclick="openModal(${m.id})" style="display:${isUnlocked?'':'none'}">✏️ Edit</button>
+        <button class="del-btn" onclick="deleteMatch(${m.id})" style="display:${isUnlocked?'':'none'}">Delete</button>
+    </div>`}
+  </div>`;
 }
 
-function formatDate(d) {
-  try {
-    return new Date(d + 'T12:00:00').toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'});
-  } catch(e){ return d; }
+function toggleCard(id) {
+  const el = document.getElementById('mb-' + id);
+  if (el) el.classList.toggle('open');
 }
 
-// ─── GOALSCORER TABLE ─────────────────────────
+// ─── GOAL TABLE ───────────────────────────────
 function renderGoalTable() {
   const totals = {};
-  allMatches.forEach(m => {
-    (m.scorers || []).forEach(s => {
-      totals[s.playerId] = (totals[s.playerId] || 0) + s.goals;
-    });
-  });
-  const sorted = Object.entries(totals)
-    .map(([id, goals]) => ({ player: ROSTER.find(r => r.id === +id), goals }))
-    .filter(x => x.player)
-    .sort((a,b) => b.goals - a.goals);
+  allMatches.forEach(m => (m.scorers||[]).forEach(s => { totals[s.playerId] = (totals[s.playerId]||0) + s.goals; }));
+  renderStatTable('goalTable', totals, '⚽', 'G');
+}
 
-  const el = document.getElementById('goalTable');
-  if (!sorted.length) {
-    el.innerHTML = '<div class="empty-state">No goals yet</div>';
-    return;
-  }
-  el.innerHTML = `<div class="g-table">` +
-    sorted.map((entry, i) => {
-      const rankCls = i === 0 ? 'g-rank-1' : i === 1 ? 'g-rank-2' : i === 2 ? 'g-rank-3' : '';
-      const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : i+1;
-      return `<div class="g-row">
-        <div class="g-rank ${rankCls}">${medal}</div>
-        <div class="g-num">${entry.player.num}</div>
-        <div class="g-info">
-          <div class="g-shirt">${entry.player.shirt}</div>
-          <div class="g-full">${entry.player.name}</div>
-        </div>
-        <span class="g-goals">${entry.goals}</span>
-        <span class="g-ball">⚽</span>
-      </div>`;
-    }).join('') + `</div>`;
+function renderAssistTable() {
+  const totals = {};
+  allMatches.forEach(m => (m.scorers||[]).forEach(s => { if (s.assists) totals[s.assists] = (totals[s.assists]||0) + 1; }));
+  renderStatTable('assistTable', totals, '🅰️', 'A');
+}
+
+function renderStatTable(elId, totals, icon, lbl) {
+  const el = document.getElementById(elId);
+  const sorted = Object.entries(totals).map(([id,n]) => ({player:ROSTER.find(r=>r.id===+id),n})).filter(x=>x.player&&x.n>0).sort((a,b)=>b.n-a.n);
+  if (!sorted.length) { el.innerHTML = `<div class="stat-table"><div class="empty-state">No ${lbl === 'G' ? 'goals' : 'assists'} yet</div></div>`; return; }
+  el.innerHTML = `<div class="stat-table">` + sorted.map((e,i) => {
+    const rc = i===0?'g-rank-1':i===1?'g-rank-2':i===2?'g-rank-3':'';
+    const medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1;
+    return `<div class="g-row">
+      <div class="g-rank ${rc}">${medal}</div>
+      <div class="g-num">${e.player.num}</div>
+      <div class="g-info"><div class="g-shirt">${e.player.shirt}</div><div class="g-full">${e.player.name}</div></div>
+      <span class="g-stat">${e.n}</span><span class="g-stat-lbl">${icon}</span>
+    </div>`;
+  }).join('') + `</div>`;
 }
 
 // ─── DELETE ───────────────────────────────────
 async function deleteMatch(id) {
   if (!confirm('Delete this match?')) return;
   allMatches = allMatches.filter(m => m.id !== id);
-  await pushMatches();
-  renderMatches();
-  renderGoalTable();
+  await pushData();
+  renderAll();
 }
 
-// ─── MODAL ────────────────────────────────────
+// ─── MODAL STATE ──────────────────────────────
 let selectedType = 'Friendly';
+let goalCounts = {};   // playerId -> number of goals
+let assistMap = {};    // scoringPlayerId -> assistingPlayerId or null
+let attendance = new Set();
+let cardMap = {};      // playerId -> 'Y'|'R'|'DY'|null
+let selectedMvp = null;
+let editingId = null;
 
-function openModal() {
-  selectedType = 'Friendly';
+function openModal(matchId) {
+  editingId = matchId;
+  const m = matchId !== null ? allMatches.find(x => x.id === matchId) : null;
+  document.getElementById('modalTitle').textContent = m ? 'Edit Match' : 'Add Match';
+
+  // Reset
+  selectedType = m?.type || 'Friendly';
   goalCounts = {};
-  ROSTER.forEach(p => { goalCounts[p.id] = 0; });
+  assistMap = {};
+  attendance = new Set(m?.attendance || []);
+  cardMap = {};
+  selectedMvp = m?.mvp ?? null;
 
-  // Type grid
-  document.getElementById('typeGrid').innerHTML = MATCH_TYPES.map(t =>
-    `<div class="type-pill${t === selectedType ? ' sel' : ''}" onclick="selType('${t}')">${t}</div>`
-  ).join('');
+  ROSTER.forEach(p => { goalCounts[p.id] = 0; cardMap[p.id] = null; });
+  if (m?.scorers) m.scorers.forEach(s => { goalCounts[s.playerId] = s.goals; assistMap[s.playerId] = s.assists || null; });
+  if (m?.cards) m.cards.forEach(c => { cardMap[c.playerId] = c.type; });
 
-  // Date = today
-  document.getElementById('fDate').value = new Date().toISOString().slice(0,10);
-  document.getElementById('fOpponent').value = '';
-  document.getElementById('fFor').value = '';
-  document.getElementById('fAgainst').value = '';
+  // Fill fields
+  document.getElementById('fOpponent').value = m?.opponent || '';
+  document.getElementById('fDate').value = m?.date || new Date().toISOString().slice(0,10);
+  document.getElementById('fTime').value = m?.time || '';
+  document.getElementById('fFor').value = m?.goalsFor ?? '';
+  document.getElementById('fAgainst').value = m?.goalsAgainst ?? '';
+  document.getElementById('fFormation').value = m?.formation || '';
+  document.getElementById('fYoutube').value = m?.youtube || '';
 
-  // Scorer grid
-  renderScorerGrid();
+  buildTypeGrid();
+  buildScorerGrid();
+  buildAttGrid();
+  buildCardGrid();
+  buildMvpGrid();
 
   document.getElementById('modalBg').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
 
-function selType(t) {
-  selectedType = t;
-  document.querySelectorAll('.type-pill').forEach(el => {
-    el.classList.toggle('sel', el.textContent === t);
-  });
-}
-
-function renderScorerGrid() {
-  document.getElementById('scorerGrid').innerHTML = ROSTER
-    .filter(p => p.pos !== 'GK')
-    .map(p => `
-    <div class="scorer-row">
-      <span class="scorer-name"><strong>${p.shirt}</strong> <span style="font-weight:400;color:var(--muted)">#${p.num}</span></span>
-      <div class="scorer-num-ctrl">
-        <button class="goal-dec" onclick="adjustGoal(${p.id},-1)">−</button>
-        <span class="goal-count" id="gc-${p.id}">0</span>
-        <button class="goal-inc" onclick="adjustGoal(${p.id},1)">+</button>
-      </div>
-    </div>`).join('');
-}
-
-function adjustGoal(pid, delta) {
-  goalCounts[pid] = Math.max(0, (goalCounts[pid]||0) + delta);
-  const el = document.getElementById('gc-'+pid);
-  if (el) el.textContent = goalCounts[pid];
-}
-
 function closeModal() {
   document.getElementById('modalBg').classList.remove('open');
   document.body.style.overflow = '';
+  editingId = null;
+}
+function handleModalBg(e) { if (e.target === document.getElementById('modalBg')) closeModal(); }
+
+// TYPE GRID
+function buildTypeGrid() {
+  document.getElementById('typeGrid').innerHTML = MATCH_TYPES.map(t =>
+    `<div class="type-pill${t===selectedType?' sel':''}" onclick="selType('${t}')">${t}</div>`
+  ).join('');
+}
+function selType(t) {
+  selectedType = t;
+  document.querySelectorAll('.type-pill').forEach(el => el.classList.toggle('sel', el.textContent===t));
 }
 
-function handleModalBg(e) {
-  if (e.target === document.getElementById('modalBg')) closeModal();
+// SCORER GRID
+function buildScorerGrid() {
+  document.getElementById('scorerGrid').innerHTML = ROSTER.filter(p => p.pos !== 'GK').map(p => {
+    const gc = goalCounts[p.id] || 0;
+    const assistPid = assistMap[p.id];
+    const assistorName = assistPid !== null && assistPid !== undefined ? ROSTER.find(r=>r.id===assistPid)?.shirt || '?' : null;
+    return `<div class="scorer-row" id="srow-${p.id}">
+      <span class="scorer-name"><strong>${p.shirt}</strong> <span style="font-weight:400;color:var(--muted)">#${p.num}</span></span>
+      <div class="scorer-num-ctrl">
+        <button class="goal-dec" onclick="adjGoal(${p.id},-1)">−</button>
+        <span class="goal-count" id="gc-${p.id}">${gc}</span>
+        <button class="goal-inc" onclick="adjGoal(${p.id},1)">+</button>
+        <button class="assist-toggle${assistPid!=null?' on':''}" id="at-${p.id}" onclick="toggleAssist(${p.id})" style="${gc>0?'':'display:none'}" title="Toggle assist">
+          🅰️${assistorName ? ' '+assistorName : '+'}
+        </button>
+      </div>
+    </div>`;
+  }).join('');
 }
 
+function adjGoal(pid, d) {
+  goalCounts[pid] = Math.max(0, (goalCounts[pid]||0)+d);
+  const el = document.getElementById('gc-'+pid);
+  if (el) el.textContent = goalCounts[pid];
+  const at = document.getElementById('at-'+pid);
+  if (at) { at.style.display = goalCounts[pid] > 0 ? '' : 'none'; if (goalCounts[pid]===0){assistMap[pid]=null;at.classList.remove('on');at.textContent='🅰️+';} }
+}
+
+function toggleAssist(scorerPid) {
+  // Cycle through available assistors (not the scorer)
+  const options = ROSTER.filter(r => r.id !== scorerPid);
+  const current = assistMap[scorerPid];
+  const currentIdx = options.findIndex(r => r.id === current);
+  const next = currentIdx < options.length - 1 ? options[currentIdx+1] : null;
+  assistMap[scorerPid] = next ? next.id : null;
+  const btn = document.getElementById('at-'+scorerPid);
+  if (btn) {
+    btn.classList.toggle('on', assistMap[scorerPid]!=null);
+    btn.textContent = assistMap[scorerPid]!=null ? `🅰️ ${next?.shirt}` : '🅰️+';
+  }
+}
+
+// ATTENDANCE GRID
+function buildAttGrid() {
+  document.getElementById('attGrid').innerHTML = ROSTER.map(p =>
+    `<div class="att-item${attendance.has(p.id)?' checked':''}" onclick="toggleAtt(${p.id})" id="att-${p.id}">
+      <div class="att-check">${attendance.has(p.id)?'✓':''}</div>
+      <span class="att-name">${p.shirt}</span>
+    </div>`
+  ).join('');
+}
+function toggleAtt(pid) {
+  if (attendance.has(pid)) attendance.delete(pid); else attendance.add(pid);
+  const item = document.getElementById('att-'+pid);
+  item.classList.toggle('checked', attendance.has(pid));
+  item.querySelector('.att-check').textContent = attendance.has(pid) ? '✓' : '';
+}
+
+// CARD GRID
+function buildCardGrid() {
+  document.getElementById('cardGrid').innerHTML = ROSTER.filter(p=>p.pos!=='GK').map(p => {
+    const cur = cardMap[p.id];
+    return `<div class="card-row">
+      <span class="card-name">${p.shirt}</span>
+      <div class="card-opts">
+        <button class="card-opt${cur==='Y'?' sel-Y':''}" onclick="setCard(${p.id},'Y')">🟨</button>
+        <button class="card-opt${cur==='DY'?' sel-DY':''}" onclick="setCard(${p.id},'DY')">🟨🟥</button>
+        <button class="card-opt${cur==='R'?' sel-R':''}" onclick="setCard(${p.id},'R')">🟥</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function setCard(pid, type) {
+  cardMap[pid] = cardMap[pid] === type ? null : type;
+  buildCardGrid();
+}
+
+// MVP GRID
+function buildMvpGrid() {
+  const players = ROSTER.filter(p => p.pos !== 'GK');
+  document.getElementById('mvpGrid').innerHTML =
+    `<div class="mvp-none${selectedMvp===null?' sel':''}" onclick="setMvp(null)">None</div>` +
+    players.map(p =>
+      `<div class="mvp-item${selectedMvp===p.id?' sel':''}" onclick="setMvp(${p.id})">${p.shirt}</div>`
+    ).join('');
+}
+function setMvp(pid) { selectedMvp = pid; buildMvpGrid(); }
+
+// SAVE MATCH
 async function saveMatch() {
   const opponent = document.getElementById('fOpponent').value.trim();
   const date = document.getElementById('fDate').value;
-  const goalsFor = parseInt(document.getElementById('fFor').value) || 0;
-  const goalsAgainst = parseInt(document.getElementById('fAgainst').value) || 0;
+  const goalsFor = parseInt(document.getElementById('fFor').value)||0;
+  const goalsAgainst = parseInt(document.getElementById('fAgainst').value)||0;
+  if (!opponent||!date) { alert('Please fill in opponent and date.'); return; }
 
-  if (!opponent || !date) { alert('Please fill in opponent and date.'); return; }
+  const scorers = ROSTER.filter(p => p.pos!=='GK' && goalCounts[p.id]>0).map(p => ({
+    playerId: p.id, goals: goalCounts[p.id], assists: assistMap[p.id]||null
+  }));
+  const cards = ROSTER.filter(p => p.pos!=='GK' && cardMap[p.id]).map(p => ({
+    playerId: p.id, type: cardMap[p.id]
+  }));
 
-  const scorers = Object.entries(goalCounts)
-    .filter(([,g]) => g > 0)
-    .map(([id, goals]) => ({ playerId: +id, goals }));
-
-  const newMatch = {
-    id: Date.now(),
-    date, type: selectedType, opponent, goalsFor, goalsAgainst, scorers
+  const match = {
+    id: editingId !== null ? editingId : Date.now(),
+    date, time: document.getElementById('fTime').value,
+    type: selectedType, opponent, goalsFor, goalsAgainst,
+    formation: document.getElementById('fFormation').value || null,
+    youtube: document.getElementById('fYoutube').value.trim() || null,
+    scorers, cards,
+    attendance: [...attendance],
+    mvp: selectedMvp
   };
 
-  allMatches.push(newMatch);
+  if (editingId !== null) {
+    const idx = allMatches.findIndex(m => m.id === editingId);
+    if (idx >= 0) allMatches[idx] = match; else allMatches.push(match);
+  } else {
+    allMatches.push(match);
+  }
+
   closeModal();
-  renderMatches();
-  renderGoalTable();
-  await pushMatches();
+  renderAll();
+  await pushData();
+}
+
+// ─── HELPERS ──────────────────────────────────
+function getResult(m) { return m.goalsFor > m.goalsAgainst ? 'W' : m.goalsFor < m.goalsAgainst ? 'L' : 'D'; }
+function formatDate(d) {
+  try { return new Date(d+'T12:00:00').toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'}); } catch(e){return d;}
 }
 
 // ─── INIT ─────────────────────────────────────
-fetchMatches();
+fetchData();
+if (isUnlocked) {
+  const fab = document.getElementById('editFab');
+  fab.textContent = '✅ Editing';
+  fab.classList.add('unlocked');
+}
 </script>
 </body>
 </html>

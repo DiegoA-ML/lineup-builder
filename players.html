@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Players — Inter Milanesa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0ede8;--surface:#ffffff;--text:#1a1a18;--muted:#888;
+  --border:rgba(0,0,0,0.1);--accent:#1a6ef5;
+  --font:'Barlow',sans-serif;--font-num:'Barlow Condensed',sans-serif;
+}
+@media(prefers-color-scheme:dark){
+  :root{--bg:#141412;--surface:#1e1e1c;--text:#f0ede8;--muted:#666;--border:rgba(255,255,255,0.1)}
+}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var(--font);-webkit-tap-highlight-color:transparent}
+
+.nav{display:flex;align-items:center;justify-content:space-between;padding:6px 12px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;gap:8px}
+.nav-title{font-size:16px;font-weight:700;letter-spacing:-.3px;flex-shrink:0}
+.nav-tabs{display:flex;gap:4px}
+.nav-tab{padding:6px 11px;font-family:var(--font);font-size:12px;font-weight:600;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:var(--muted);background:transparent;cursor:pointer;transition:all .15s;letter-spacing:.2px;white-space:nowrap}
+.nav-tab.on{background:var(--accent);color:#fff;border-color:transparent}
+
+.content{padding:14px}
+.section-label{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:10px;display:block}
+.loading{text-align:center;padding:40px;color:var(--muted);font-size:14px}
+
+/* PLAYER GRID */
+.player-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}
+.player-card{
+  background:var(--surface);border-radius:12px;border:1px solid var(--border);
+  padding:14px 12px;cursor:pointer;transition:all .15s;
+}
+.player-card:active{transform:scale(.98)}
+.pc-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.pc-num{
+  width:36px;height:36px;border-radius:50%;background:var(--bg);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-num);font-size:13px;font-weight:700;flex-shrink:0;
+}
+.pc-info{min-width:0}
+.pc-shirt{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc-pos{font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;display:inline-block;margin-top:1px}
+.pos-GK{background:#fdefd3;color:#c47d0a}
+.pos-DEF{background:#d3e8fd;color:#0a5ec4}
+.pos-MID{background:#d3fde8;color:#0a9e4a}
+.pos-FWD{background:#fdd3d3;color:#c40a0a}
+
+.pc-stats{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.pc-stat{text-align:center;background:var(--bg);border-radius:7px;padding:5px 2px}
+.pc-stat-val{font-family:var(--font-num);font-size:16px;font-weight:700;display:block}
+.pc-stat-lbl{font-size:9px;font-weight:700;letter-spacing:.4px;color:var(--muted);text-transform:uppercase}
+.pc-att-bar{margin-top:8px;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.pc-att-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .3s}
+.pc-att-txt{font-size:10px;color:var(--muted);font-weight:600;margin-top:3px}
+
+/* PROFILE SHEET */
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.48);z-index:200;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity .25s}
+.sheet-bg.open{opacity:1;pointer-events:all}
+.sheet{background:var(--surface);border-radius:20px 20px 0 0;width:100%;max-height:88vh;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .28s cubic-bezier(.32,1,.56,1)}
+.sheet-bg.open .sheet{transform:translateY(0)}
+.sheet-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:10px auto 0;flex-shrink:0}
+.sheet-body{overflow-y:auto;flex:1;padding:0 16px 24px}
+
+/* PROFILE HEADER */
+.profile-head{
+  display:flex;align-items:center;gap:14px;
+  padding:16px 0 14px;border-bottom:1px solid var(--border);margin-bottom:16px;
+}
+.profile-num{
+  width:56px;height:56px;border-radius:50%;background:var(--bg);border:2px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-num);font-size:20px;font-weight:700;flex-shrink:0;
+}
+.profile-shirt{font-size:22px;font-weight:700}
+.profile-name{font-size:13px;color:var(--muted);margin-top:2px}
+.close-btn{margin-left:auto;width:30px;height:30px;border-radius:50%;border:none;background:var(--bg);color:var(--muted);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+/* PROFILE STAT GRID */
+.profile-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.ps-box{background:var(--bg);border-radius:10px;padding:10px 8px;text-align:center}
+.ps-val{font-family:var(--font-num);font-size:24px;font-weight:700;display:block}
+.ps-lbl{font-size:10px;font-weight:700;letter-spacing:.4px;color:var(--muted);text-transform:uppercase}
+
+/* MATCH LOG */
+.match-log-title{font-size:12px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.log-row{
+  display:flex;align-items:center;gap:8px;padding:9px 10px;
+  background:var(--bg);border-radius:8px;margin-bottom:6px;
+}
+.log-date{font-size:11px;color:var(--muted);width:62px;flex-shrink:0}
+.log-opp{font-size:13px;font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.log-chips{display:flex;gap:4px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
+.log-chip{font-size:11px;font-weight:700;padding:2px 6px;border-radius:4px}
+.lc-present{background:#edfaed;color:#1a7a1a}
+.lc-absent{background:var(--surface);color:var(--muted);border:1px solid var(--border)}
+.lc-goal{background:#edfaed;color:#1a7a1a}
+.lc-assist{background:#e8f4fd;color:#0a5ec4}
+.lc-mvp{background:#fef9e7;color:#c47d0a}
+.lc-Y{background:#fef9e7;color:#c47d0a}
+.lc-R{background:#fdeaea;color:#c40a0a}
+.lc-DY{background:#fdf3e8;color:#b8600a}
+
+.att-summary{
+  background:var(--bg);border-radius:10px;padding:12px;margin-bottom:16px;
+  display:flex;align-items:center;gap:12px;
+}
+.att-bar-wrap{flex:1}
+.att-bar-bg{height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.att-bar-fill{height:100%;background:var(--accent);border-radius:3px}
+.att-pct{font-family:var(--font-num);font-size:22px;font-weight:700;flex-shrink:0}
+
+.pb-safe{height:30px}
+</style>
+</head>
+<body>
+
+<!-- PROFILE SHEET -->
+<div class="sheet-bg" id="sheetBg" onclick="if(event.target===this)closeProfile()">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-body" id="sheetBody"></div>
+  </div>
+</div>
+
+<nav class="nav">
+  <span class="nav-title">⚽ Inter Milanesa</span>
+  <div class="nav-tabs">
+    <a class="nav-tab" href="index.html">Lineup</a>
+    <a class="nav-tab" href="matches.html">Matches</a>
+    <a class="nav-tab on" href="players.html">Players</a>
+  </div>
+</nav>
+
+<div class="content">
+  <span class="section-label">Squad</span>
+  <div id="playerGrid"><div class="loading">Loading stats…</div></div>
+  <div class="pb-safe"></div>
+</div>
+
+<script>
+const BIN_ID  = 'PASTE_YOUR_BIN_ID_HERE';
+const API_KEY = 'PASTE_YOUR_API_KEY_HERE';
+const BASE = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+const HEADERS = {'Content-Type':'application/json','X-Master-Key':API_KEY};
+
+const ROSTER = [
+  {id:0,  name:'Fernando Garza',         shirt:'Garza',     num:'99',  pos:'GK'},
+  {id:1,  name:'Luis Roberto Velázquez', shirt:'Velázquez', num:'2',   pos:'DEF'},
+  {id:2,  name:'Alonso Martínez',        shirt:'Maldini',   num:'3',   pos:'DEF'},
+  {id:3,  name:'Armando Ledinich',       shirt:'Ledinich',  num:'23',  pos:'DEF'},
+  {id:4,  name:'Mateo Zepeda',           shirt:'Zepeda',    num:'777', pos:'DEF'},
+  {id:5,  name:'Diego Armando Mijares',  shirt:'Diego',     num:'5',   pos:'MID'},
+  {id:6,  name:'Josh Kenig',             shirt:'Josh',      num:'8',   pos:'MID'},
+  {id:7,  name:'Cesar Emiliano Méndez',  shirt:'Méndez',    num:'10',  pos:'MID'},
+  {id:8,  name:'Avelino Fernández',      shirt:'Ave',       num:'11',  pos:'MID'},
+  {id:9,  name:'Alan Augusto Celma',     shirt:'Alan',      num:'19',  pos:'MID'},
+  {id:10, name:'Ricardo Esteban Gaspar', shirt:'Gaspar',    num:'25',  pos:'MID'},
+  {id:11, name:'Gerardo Contreras',      shirt:'Gerardo',   num:'7',   pos:'FWD'},
+];
+
+let allMatches = [];
+let stats = {}; // computed per player
+
+async function fetchData() {
+  const isConfigured = BIN_ID !== 'PASTE_YOUR_BIN_ID_HERE';
+  if (!isConfigured) {
+    allMatches = [{id:1,date:'2026-04-18',type:'Friendly',opponent:'Campeones Kalcho',goalsFor:3,goalsAgainst:4,scorers:[{playerId:11,goals:2,assists:null},{playerId:5,goals:1,assists:null}],attendance:[5,6,7,8,9,10,11],cards:[],mvp:11}];
+  } else {
+    try {
+      const r = await fetch(BASE+'/latest',{headers:HEADERS});
+      const data = await r.json();
+      allMatches = data.record.matches || [];
+    } catch(e) {
+      document.getElementById('playerGrid').innerHTML = '<div style="color:#e74c3c;padding:20px;text-align:center">Could not load data.</div>';
+      return;
+    }
+  }
+  computeStats();
+  renderGrid();
+}
+
+function computeStats() {
+  const totalMatches = allMatches.length;
+  ROSTER.forEach(p => {
+    let played = 0, goals = 0, assists = 0, yellows = 0, reds = 0, mvps = 0;
+    allMatches.forEach(m => {
+      const attended = m.attendance?.includes(p.id);
+      if (attended) played++;
+      (m.scorers||[]).forEach(s => {
+        if (s.playerId === p.id) goals += s.goals;
+        if (s.assists === p.id) assists++;
+      });
+      (m.cards||[]).forEach(c => {
+        if (c.playerId !== p.id) return;
+        if (c.type === 'Y') yellows++;
+        else if (c.type === 'R') reds++;
+        else if (c.type === 'DY') { yellows++; reds++; }
+      });
+      if (m.mvp === p.id) mvps++;
+    });
+    stats[p.id] = {played, goals, assists, yellows, reds, mvps, totalMatches};
+  });
+}
+
+function renderGrid() {
+  const grid = document.getElementById('playerGrid');
+  const order = ['GK','DEF','MID','FWD'];
+  const sorted = [...ROSTER].sort((a,b) => order.indexOf(a.pos)-order.indexOf(b.pos));
+  grid.innerHTML = `<div class="player-grid">${sorted.map(p => buildCard(p)).join('')}</div>`;
+}
+
+function buildCard(p) {
+  const s = stats[p.id];
+  const attPct = s.totalMatches > 0 ? Math.round((s.played/s.totalMatches)*100) : 0;
+  return `<div class="player-card" onclick="openProfile(${p.id})">
+    <div class="pc-header">
+      <div class="pc-num">${p.num}</div>
+      <div class="pc-info">
+        <div class="pc-shirt">${p.shirt}</div>
+        <span class="pc-pos pos-${p.pos}">${p.pos}</span>
+      </div>
+    </div>
+    <div class="pc-stats">
+      <div class="pc-stat"><span class="pc-stat-val">${s.goals}</span><span class="pc-stat-lbl">⚽</span></div>
+      <div class="pc-stat"><span class="pc-stat-val">${s.assists}</span><span class="pc-stat-lbl">🅰️</span></div>
+      <div class="pc-stat"><span class="pc-stat-val">${s.yellows}</span><span class="pc-stat-lbl">🟨</span></div>
+      <div class="pc-stat"><span class="pc-stat-val">${s.reds}</span><span class="pc-stat-lbl">🟥</span></div>
+    </div>
+    <div class="pc-att-bar"><div class="pc-att-fill" style="width:${attPct}%"></div></div>
+    <div class="pc-att-txt">${s.played}/${s.totalMatches} matches attended</div>
+  </div>`;
+}
+
+function openProfile(pid) {
+  const p = ROSTER.find(r => r.id === pid);
+  const s = stats[pid];
+  const attPct = s.totalMatches > 0 ? Math.round((s.played/s.totalMatches)*100) : 0;
+
+  const sorted = [...allMatches].sort((a,b) => b.date.localeCompare(a.date));
+
+  const logRows = sorted.map(m => {
+    const attended = m.attendance?.includes(pid);
+    const goalsInMatch = (m.scorers||[]).find(sc=>sc.playerId===pid)?.goals||0;
+    const assistsInMatch = (m.scorers||[]).filter(sc=>sc.assists===pid).length;
+    const card = (m.cards||[]).find(c=>c.playerId===pid);
+    const isMvp = m.mvp === pid;
+    const res = m.goalsFor > m.goalsAgainst ? 'W' : m.goalsFor < m.goalsAgainst ? 'L' : 'D';
+    const resColor = res==='W'?'#27ae60':res==='L'?'#e74c3c':'#888';
+
+    let chips = `<span class="log-chip ${attended?'lc-present':'lc-absent'}">${attended?'✓':'✗'}</span>`;
+    if (goalsInMatch) chips += `<span class="log-chip lc-goal">⚽${goalsInMatch>1?'x'+goalsInMatch:''}</span>`;
+    if (assistsInMatch) chips += `<span class="log-chip lc-assist">🅰️${assistsInMatch>1?'x'+assistsInMatch:''}</span>`;
+    if (isMvp) chips += `<span class="log-chip lc-mvp">⭐</span>`;
+    if (card) chips += `<span class="log-chip lc-${card.type}">${card.type==='Y'?'🟨':card.type==='R'?'🟥':'🟨🟥'}</span>`;
+
+    return `<div class="log-row">
+      <span class="log-date" style="color:${resColor};font-weight:700">${res} ${formatDateShort(m.date)}</span>
+      <span class="log-opp">vs ${m.opponent}</span>
+      <div class="log-chips">${chips}</div>
+    </div>`;
+  }).join('') || '<div style="color:var(--muted);font-size:13px;padding:8px 0">No matches recorded yet.</div>';
+
+  document.getElementById('sheetBody').innerHTML = `
+    <div class="profile-head">
+      <div class="profile-num">${p.num}</div>
+      <div>
+        <div class="profile-shirt">${p.shirt}</div>
+        <div class="profile-name">${p.name}</div>
+        <span class="pc-pos pos-${p.pos}" style="margin-top:4px">${p.pos}</span>
+      </div>
+      <button class="close-btn" onclick="closeProfile()">✕</button>
+    </div>
+
+    <div class="profile-stats">
+      <div class="ps-box"><span class="ps-val">${s.goals}</span><span class="ps-lbl">Goals</span></div>
+      <div class="ps-box"><span class="ps-val">${s.assists}</span><span class="ps-lbl">Assists</span></div>
+      <div class="ps-box"><span class="ps-val">${s.played}</span><span class="ps-lbl">Played</span></div>
+      <div class="ps-box"><span class="ps-val">${s.yellows}</span><span class="ps-lbl">Yellows</span></div>
+      <div class="ps-box"><span class="ps-val">${s.reds}</span><span class="ps-lbl">Reds</span></div>
+      <div class="ps-box"><span class="ps-val">${s.mvps}</span><span class="ps-lbl">MVP</span></div>
+    </div>
+
+    <div class="att-summary">
+      <div class="att-bar-wrap">
+        <div style="font-size:12px;font-weight:700;margin-bottom:4px">Attendance rate</div>
+        <div class="att-bar-bg"><div class="att-bar-fill" style="width:${attPct}%"></div></div>
+        <div style="font-size:11px;color:var(--muted);margin-top:3px">${s.played} of ${s.totalMatches} matches</div>
+      </div>
+      <div class="att-pct">${attPct}%</div>
+    </div>
+
+    <div class="match-log-title">Match by Match</div>
+    ${logRows}
+  `;
+
+  document.getElementById('sheetBg').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeProfile() {
+  document.getElementById('sheetBg').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function formatDateShort(d) {
+  try { return new Date(d+'T12:00:00').toLocaleDateString('es-MX',{day:'numeric',month:'short'}); } catch(e){return d;}
+}
+
+fetchData();
+</script>
+</body>
+</html>
