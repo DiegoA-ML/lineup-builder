@@ -124,12 +124,12 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
   background:var(--bg);border:1px solid var(--border);
   border-radius:20px;color:var(--text);display:flex;align-items:center;gap:4px;
 }
-.chip-goal{border-color:rgba(39,174,96,.4);background:#edfaed}
-.chip-assist{border-color:rgba(26,110,245,.3);background:#e8f4fd}
-.chip-mvp{border-color:rgba(243,156,18,.5);background:#fef9e7}
-.chip-Y{border-color:#f39c12;background:#fef9e7}
-.chip-R{border-color:#e74c3c;background:#fdeaea}
-.chip-DY{border-color:#e67e22;background:#fdf3e8}
+.chip-goal{border-color:rgba(39,174,96,.5);background:rgba(39,174,96,.15);color:#27ae60}
+.chip-assist{border-color:rgba(26,110,245,.4);background:rgba(26,110,245,.12);color:#1a6ef5}
+.chip-mvp{border-color:rgba(243,156,18,.5);background:rgba(243,156,18,.12);color:#d4900a}
+.chip-Y{border-color:rgba(243,156,18,.6);background:rgba(243,156,18,.12);color:#d4900a}
+.chip-R{border-color:rgba(231,76,60,.5);background:rgba(231,76,60,.12);color:#e74c3c}
+.chip-DY{border-color:rgba(230,126,34,.5);background:rgba(230,126,34,.12);color:#e67e22}
 .mb-section{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;margin-top:8px}
 .mb-section:first-child{margin-top:0}
 .yt-link{
@@ -142,7 +142,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
   font-size:11px;font-weight:600;padding:2px 8px;border-radius:12px;
   background:var(--bg);border:1px solid var(--border);color:var(--muted);
 }
-.att-chip.present{background:#edfaed;border-color:rgba(39,174,96,.4);color:#1a7a1a}
+.att-chip.present{background:rgba(39,174,96,.15);border-color:rgba(39,174,96,.5);color:#27ae60}
 .match-actions{display:flex;justify-content:flex-end;gap:6px;padding:8px 14px 10px;border-top:1px solid var(--border)}
 .edit-match-btn{font-size:11px;font-weight:600;padding:4px 10px;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--accent);cursor:pointer;font-family:var(--font)}
 .del-btn{font-size:11px;font-weight:600;padding:4px 10px;border:1px solid var(--border);border-radius:6px;background:transparent;color:#e74c3c;cursor:pointer;font-family:var(--font)}
@@ -425,7 +425,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
 // ─── CONFIG ───────────────────────────────────
 const BIN_ID  = '69e3d72836566621a8c96d0a';
 const API_KEY = '$2a$10$AJMfLQm2lz9YD23C35XrgO8VNu8T4B3tkHG7X6vVCEgm85UHsDVB6';
-const PASSWORD = 'thegameneverdies'; // hack me if you must.
+const PASSWORD = 'thegameneverdies';
 // ──────────────────────────────────────────────
 
 const ROSTER = [
