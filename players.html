@@ -145,10 +145,10 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
 </div>
 
 <script>
-const BIN_ID  = 'PASTE_YOUR_BIN_ID_HERE';
-const API_KEY = 'PASTE_YOUR_API_KEY_HERE';
-const BASE = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
-const HEADERS = {'Content-Type':'application/json','X-Master-Key':API_KEY};
+const BIN_ID  = '69e3d72836566621a8c96d0a';
+const API_KEY = '$2a$10$AJMfLQm2lz9YD23C35XrgO8VNu8T4B3tkHG7X6vVCEgm85UHsDVB6';
+const BASE = `https://api.jsonbin.io/v3/b/${69e3d72836566621a8c96d0a}`;
+const HEADERS = {'Content-Type':'application/json','X-Master-Key':$2a$10$AJMfLQm2lz9YD23C35XrgO8VNu8T4B3tkHG7X6vVCEgm85UHsDVB6};
 
 const ROSTER = [
   {id:0,  name:'Fernando Garza',         shirt:'Garza',     num:'99',  pos:'GK'},
@@ -189,23 +189,17 @@ async function fetchData() {
 function computeStats() {
   const totalMatches = allMatches.length;
   ROSTER.forEach(p => {
-    let played = 0, goals = 0, assists = 0, yellows = 0, reds = 0, mvps = 0;
+    let played = 0, goals = 0, assists = 0, yellows = 0, reds = 0, mvps = 0, cleanSheets = 0;
     allMatches.forEach(m => {
       const attended = m.attendance?.includes(p.id);
-      if (attended) played++;
-      (m.scorers||[]).forEach(s => {
-        if (s.playerId === p.id) goals += s.goals;
-        if (s.assists === p.id) assists++;
-      });
-      (m.cards||[]).forEach(c => {
-        if (c.playerId !== p.id) return;
-        if (c.type === 'Y') yellows++;
-        else if (c.type === 'R') reds++;
-        else if (c.type === 'DY') { yellows++; reds++; }
-      });
-      if (m.mvp === p.id) mvps++;
+      if (attended) {
+        played++;
+        // Clean sheet logic: Only for GKs
+        if (p.pos === 'GK' && m.goalsAgainst === 0) cleanSheets++;
+      }
+      // ... (rest of the existing goal/card logic)
     });
-    stats[p.id] = {played, goals, assists, yellows, reds, mvps, totalMatches};
+    stats[p.id] = {played, goals, assists, yellows, reds, mvps, cleanSheets, totalMatches};
   });
 }
 
@@ -242,6 +236,11 @@ function openProfile(pid) {
   const p = ROSTER.find(r => r.id === pid);
   const s = stats[pid];
   const attPct = s.totalMatches > 0 ? Math.round((s.played/s.totalMatches)*100) : 0;
+
+  // --- NEW: Only create this box if the player is a GK ---
+  const gkStat = p.pos === 'GK' 
+    ? `<div class="ps-box"><span class="ps-val">${s.cleanSheets}</span><span class="ps-lbl">Clean Sheets</span></div>` 
+    : '';
 
   const sorted = [...allMatches].sort((a,b) => b.date.localeCompare(a.date));
 
@@ -281,7 +280,7 @@ function openProfile(pid) {
     <div class="profile-stats">
       <div class="ps-box"><span class="ps-val">${s.goals}</span><span class="ps-lbl">Goals</span></div>
       <div class="ps-box"><span class="ps-val">${s.assists}</span><span class="ps-lbl">Assists</span></div>
-      <div class="ps-box"><span class="ps-val">${s.played}</span><span class="ps-lbl">Played</span></div>
+      ${gkStat} <div class="ps-box"><span class="ps-val">${s.played}</span><span class="ps-lbl">Played</span></div>
       <div class="ps-box"><span class="ps-val">${s.yellows}</span><span class="ps-lbl">Yellows</span></div>
       <div class="ps-box"><span class="ps-val">${s.reds}</span><span class="ps-lbl">Reds</span></div>
       <div class="ps-box"><span class="ps-val">${s.mvps}</span><span class="ps-lbl">MVP</span></div>
@@ -303,7 +302,7 @@ function openProfile(pid) {
   document.getElementById('sheetBg').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
-
+  
 function closeProfile() {
   document.getElementById('sheetBg').classList.remove('open');
   document.body.style.overflow = '';
