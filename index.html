@@ -420,7 +420,7 @@ function render() {
 
   fm.pos.forEach(([x, y], i) => {
     const pid = lineup[i];
-    const player = pid !== null ? ROSTER[pid] : null;
+    const player = pid !== null ? ROSTER.find(p => p.id === pid) : null;
 
     const div = document.createElement('div');
     div.className = 'token';
