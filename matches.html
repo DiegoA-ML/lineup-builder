@@ -279,7 +279,6 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
     <div class="modal-body" id="modalBody">
-      <!-- Match Info -->
       <div class="form-group">
         <label class="form-label">Match Type</label>
         <div class="type-grid" id="typeGrid"></div>
@@ -321,6 +320,10 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
       <div class="form-group">
         <label class="form-label">YouTube Link <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
         <input class="form-input" id="fYoutube" placeholder="https://youtube.com/..." type="url">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Images Link <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+        <input class="form-input" id="fImages" placeholder="https://drive.google.com/..." type="url">
       </div>
 
       <div class="form-divider"></div>
@@ -390,43 +393,30 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
 </nav>
 
 <div style="padding:14px 14px 0" id="mainContent">
-  <!-- Next Fixture -->
   <div id="fixtureSection"></div>
-
-  <!-- Form Strip -->
   <div id="formStrip"></div>
-
-  <!-- Match History -->
   <div class="section-head">
     <span class="section-label">Match History</span>
     <button class="add-btn" id="addMatchBtn" onclick="openModal(null)" style="display:none">+ Add Match</button>
   </div>
   <div id="matchList"><div class="loading">Loading…</div></div>
-
-  <!-- Goalscorer Table -->
   <div class="section-head" style="margin-top:18px">
     <span class="section-label">Top Scorers</span>
   </div>
   <div id="goalTable"></div>
-
-  <!-- Assists Table -->
   <div class="section-head" style="margin-top:18px">
     <span class="section-label">Top Assists</span>
   </div>
   <div id="assistTable"></div>
-
   <div class="pb-safe"></div>
 </div>
 
-<!-- EDIT FAB -->
 <button class="edit-fab" id="editFab" onclick="onEditFab()">✏️ Edit</button>
 
 <script>
-// ─── CONFIG ───────────────────────────────────
 const BIN_ID  = '69e3d72836566621a8c96d0a';
 const API_KEY = '$2a$10$AJMfLQm2lz9YD23C35XrgO8VNu8T4B3tkHG7X6vVCEgm85UHsDVB6';
 const PASSWORD = 'thegameneverdies';
-// ──────────────────────────────────────────────
 
 const ROSTER = [
   {id:0,  name:'Fernando Garza',         shirt:'Garza',     num:'99',  pos:'GK'},
@@ -437,7 +427,7 @@ const ROSTER = [
   {id:5,  name:'Diego Armando Mijares',  shirt:'Diego',     num:'5',   pos:'MID'},
   {id:6,  name:'Josh Kenig',             shirt:'Josh',      num:'8',   pos:'MID'},
   {id:7,  name:'Cesar Emiliano Méndez',  shirt:'Méndez',    num:'10',  pos:'MID'},
-  {id:8,  name:'Avelino Fernández',      shirt:'Ave',       num:'11',  pos:'MID'},
+  {id:8,  name:'Manuel Velázquez',       shirt:'Many',      num:'11',  pos:'FWD'},
   {id:9,  name:'Alan Augusto Celma',     shirt:'Alan',      num:'19',  pos:'MID'},
   {id:10, name:'Ricardo Esteban Gaspar', shirt:'Gaspar',    num:'25',  pos:'MID'},
   {id:11, name:'Gerardo Contreras',      shirt:'Gerardo',   num:'7',   pos:'FWD'},
@@ -539,7 +529,7 @@ function renderFixture() {
       <button class="fixture-edit" onclick="openFixtureModal()" style="display:none">Edit</button>
     </div>`;
   } else {
-    el.innerHTML = `<div class="fixture-none add-btn" onclick="isUnlocked && openFixtureModal()" id="fixturePlaceholder" style="display:none">+ Add Next Fixture</div>`;
+    el.innerHTML = `<div class="fixture-none" onclick="isUnlocked && openFixtureModal()" id="fixturePlaceholder" style="display:none">+ Add Next Fixture</div>`;
   }
 }
 
@@ -574,7 +564,6 @@ function renderFormStrip() {
     const r = getResult(m);
     return `<div class="form-dot form-${r}">${r}</div>`;
   }).join('');
-  // pad to 5 if fewer
   const empty = Array(5 - last5.length).fill('<div class="form-dot form-empty"></div>').join('');
   el.innerHTML = `<div class="form-strip">${empty}<span class="form-label-txt">Form</span>${dots}</div>`;
 }
@@ -639,7 +628,11 @@ function buildMatchCard(m) {
   let ytHtml = '';
   if (m.youtube) ytHtml = `<div style="margin-top:8px"><a class="yt-link" href="${m.youtube}" target="_blank">▶ Watch Match</a></div>`;
 
-  const hasBody = scorerHtml || mvpHtml || cardHtml || attHtml || ytHtml;
+  // images
+  let imgHtml = '';
+  if (m.images) imgHtml = `<div style="margin-top:8px"><a class="yt-link" style="color:#27ae60;background:rgba(39,174,96,.12);border-color:rgba(39,174,96,.3)" href="${m.images}" target="_blank">🖼 View Photos</a></div>`;
+
+  const hasBody = scorerHtml || mvpHtml || cardHtml || attHtml || ytHtml || imgHtml;
 
   return `<div class="match-card">
     <div class="match-top" onclick="toggleCard(${m.id})">
@@ -652,7 +645,7 @@ function buildMatchCard(m) {
       <span class="match-result-pill pill-${res}">${res}</span>
     </div>
     ${hasBody ? `<div class="match-body" id="mb-${m.id}">
-      ${scorerHtml}${mvpHtml}${cardHtml}${attHtml}${ytHtml}
+      ${scorerHtml}${mvpHtml}${cardHtml}${attHtml}${ytHtml}${imgHtml}
       <div class="match-actions">
         <button class="edit-match-btn" onclick="openModal(${m.id})" style="display:none">✏️ Edit</button>
         <button class="del-btn" onclick="deleteMatch(${m.id})" style="display:none">Delete</button>
@@ -708,10 +701,10 @@ async function deleteMatch(id) {
 
 // ─── MODAL STATE ──────────────────────────────
 let selectedType = 'Friendly';
-let goalCounts = {};   // playerId -> number of goals
-let assistMap = {};    // scoringPlayerId -> assistingPlayerId or null
+let goalCounts = {};
+let assistMap = {};
 let attendance = new Set();
-let cardMap = {};      // playerId -> 'Y'|'R'|'DY'|null
+let cardMap = {};
 let selectedMvp = null;
 let editingId = null;
 
@@ -720,7 +713,6 @@ function openModal(matchId) {
   const m = matchId !== null ? allMatches.find(x => x.id === matchId) : null;
   document.getElementById('modalTitle').textContent = m ? 'Edit Match' : 'Add Match';
 
-  // Reset
   selectedType = m?.type || 'Friendly';
   goalCounts = {};
   assistMap = {};
@@ -732,7 +724,6 @@ function openModal(matchId) {
   if (m?.scorers) m.scorers.forEach(s => { goalCounts[s.playerId] = s.goals; assistMap[s.playerId] = s.assists || null; });
   if (m?.cards) m.cards.forEach(c => { cardMap[c.playerId] = c.type; });
 
-  // Fill fields
   document.getElementById('fOpponent').value = m?.opponent || '';
   document.getElementById('fDate').value = m?.date || new Date().toISOString().slice(0,10);
   document.getElementById('fTime').value = m?.time || '';
@@ -740,6 +731,7 @@ function openModal(matchId) {
   document.getElementById('fAgainst').value = m?.goalsAgainst ?? '';
   document.getElementById('fFormation').value = m?.formation || '';
   document.getElementById('fYoutube').value = m?.youtube || '';
+  document.getElementById('fImages').value = m?.images || '';
 
   buildTypeGrid();
   buildScorerGrid();
@@ -798,7 +790,6 @@ function adjGoal(pid, d) {
 }
 
 function toggleAssist(scorerPid) {
-  // Cycle through available assistors (not the scorer)
   const options = ROSTER.filter(r => r.id !== scorerPid);
   const current = assistMap[scorerPid];
   const currentIdx = options.findIndex(r => r.id === current);
@@ -878,6 +869,7 @@ async function saveMatch() {
     type: selectedType, opponent, goalsFor, goalsAgainst,
     formation: document.getElementById('fFormation').value || null,
     youtube: document.getElementById('fYoutube').value.trim() || null,
+    images: document.getElementById('fImages').value.trim() || null,
     scorers, cards,
     attendance: [...attendance],
     mvp: selectedMvp
